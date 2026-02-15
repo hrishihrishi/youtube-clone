@@ -4,7 +4,7 @@ import { AiOutlineSearch, AiOutlineVideoCamera, AiOutlineBell } from "react-icon
 import { MdMic } from "react-icons/md";
 import { FaYoutube, FaUserCircle } from "react-icons/fa";
 
-export default function YoutubeHeader() {
+export default function YoutubeHeader({onMenuClick}){
   const [search, setSearch] = useState("");
 
   return (
@@ -12,7 +12,7 @@ export default function YoutubeHeader() {
       
       {/* Left: Menu & Logo */}
       <div className="flex items-center gap-4">
-        <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
+        <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer" onClick={onMenuClick}>
           <RxHamburgerMenu size={22} />
         </button>
 
