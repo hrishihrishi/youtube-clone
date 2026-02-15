@@ -2,6 +2,7 @@ import { useState } from 'react';
 import YoutubeHeader from './components/YoutubeHeader'; // Your existing header
 import Sidebar from './components/Sidebar';
 import VideoGrid from './VideoGrid';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -105,13 +106,16 @@ export default function App() {
       {/* Sidebar Component */}
       <div>
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        <VideoGrid isSidebarOpen={isSidebarOpen} videos={videoData} />
+        {/* <VideoGrid videos={videoData} /> */}
+
       </div>
 
       <main className="p-4">
         {/* Your video grid goes here */}
+        <Outlet />
         <h1 className="text-2xl font-bold">Recommended Videos</h1>
       </main>
+      
     </div>
   );
 }
