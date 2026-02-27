@@ -115,7 +115,7 @@ export default function App() {
         <Outlet />
         <h1 className="text-2xl font-bold">Recommended Videos</h1>
       </main>
-      
+
     </div>
   );
 }
