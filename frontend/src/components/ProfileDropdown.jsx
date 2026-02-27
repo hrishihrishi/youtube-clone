@@ -12,7 +12,7 @@ export default function ProfileDropdown({ user, onSignOut }) {
         <div className="flex flex-col overflow-hidden">
           <p className="font-medium text-base truncate">{user.name}</p>
           <p className="text-sm text-gray-600 truncate">@{user.handle}</p>
-          <a href="#" className="text-blue-600 text-sm mt-2 hover:underline">View your channel</a>
+          <a href="/ChannelPage" className="text-blue-600 text-sm mt-2 hover:underline">View your channel</a>
         </div>
       </div>
 
