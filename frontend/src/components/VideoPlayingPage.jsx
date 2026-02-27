@@ -2,10 +2,15 @@ import { useState } from 'react';
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt } from "react-icons/ai";
 import { TfiMoreAlt } from "react-icons/tfi";
 import { videoData } from './../data/videos.jsx'; 
+import { fetchVideoDetails } from '../utils/api'; 
 
 import VideoCard from './VideoCard';
 
 export default function VideoPlayingPage() {
+    // const { videoId } = useParams(); // For dynamic routing in the future
+    // const videoDetails = fetchVideoDetails(videoId);
+
+
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
@@ -42,6 +47,7 @@ export default function VideoPlayingPage() {
 
             {/* LEFT SIDE: PLAYER & INFO */}
             <div className="flex-grow lg:max-w-[calc(100%-400px)]">
+
                 {/* Video Player */}
                 <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow-lg">
                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>

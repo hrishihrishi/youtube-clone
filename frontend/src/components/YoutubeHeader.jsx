@@ -6,6 +6,8 @@ import { FaYoutube, FaUserCircle } from "react-icons/fa";
 
 export default function YoutubeHeader({onMenuClick}){
   const [search, setSearch] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
 
   return (
     <header className="flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50">
@@ -63,6 +65,23 @@ export default function YoutubeHeader({onMenuClick}){
           <FaUserCircle size={32} className="text-gray-600" />
         </button>
       </div>
+
+      {isSignedIn ? (
+          <button 
+            onClick={() => setIsSignedIn(false)} // Click to toggle for testing
+            className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
+          >
+            A
+          </button>
+        ) : (
+          <button 
+            onClick={() => setIsSignedIn(true)} // Click to toggle for testing
+            className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-blue-600 font-medium hover:bg-blue-50 transition cursor-pointer"
+          >
+            <FaUserCircle size={24} />
+            <span className="text-sm">Sign in</span>
+          </button>
+        )}
       
     </header>
   );
