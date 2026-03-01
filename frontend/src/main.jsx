@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import VideoPlayingPage from './components/VideoPlayingPage.jsx'
 import VideoGrid from './VideoGrid.jsx'
 import ChannelPage from './components/ChannelPage.jsx'
+import SearchPage from './SearchPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <VideoGrid />},
       { path: "VideoPlaying", element: <VideoPlayingPage />},
-      { path: "ChannelPage", element: <ChannelPage />}
+      { path: "ChannelPage", element: <ChannelPage />},
+      { path: "SearchPage", element: <SearchPage />}
     ]
   },
   // { path: "/VideoPlaying", element: <VideoPlayingPage />}
