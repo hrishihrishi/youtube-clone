@@ -1,5 +1,8 @@
-each video json:
+TODO:
+1. backend -- JWT --> frontend has to persist this JWT token.
+2. 
 
+each video json:
 category
 likes
 dislikes
