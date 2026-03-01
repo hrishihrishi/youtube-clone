@@ -34,7 +34,7 @@ export default function YoutubeHeader({ onMenuClick }) {
         </button>
 
         {/* YOUTUBE LOGO AND ICON */}
-        <div className="flex items-center gap-1 cursor-pointer">
+        <div className="hidden sm:flex items-center gap-1 cursor-pointer">
           <FaYoutube size={30} className="text-red-600" />
           <span className="font-bold text-xl tracking-tighter">YouTube</span>
         </div>
@@ -58,7 +58,7 @@ export default function YoutubeHeader({ onMenuClick }) {
 
           {/* SEARCH ICON */}
           <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer"
-            onClick={()=>Navigate('/SearchPage')}
+            onClick={() => Navigate('/SearchPage')}
           >
             <AiOutlineSearch size={22} />
           </button>
@@ -72,9 +72,9 @@ export default function YoutubeHeader({ onMenuClick }) {
 
       {/*  CREATE BUTTON */}
       <button
-        className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
+        className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
         aria-label="Create"
-        onClick={()=>setIsUploadModalOpen(true)}
+        onClick={() => setIsUploadModalOpen(true)}
       >
         {/* Plus Icon Wrapper */}
         <div className="w-6 h-6 flex items-center justify-center">
@@ -114,7 +114,7 @@ export default function YoutubeHeader({ onMenuClick }) {
           <div className="relative">
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
+              className="hidden sm:flex w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
             >
               {currentUser?.name?.charAt(0) || "A"}
             </button>

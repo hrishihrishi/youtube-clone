@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
+// MONGOOSE MIDDLEWARE TO HASH PASSWORD BEFORE (PRE) SAVING
 userSchema.pre('save', async function () {
     try {
         if (!this.isModified('password')) {

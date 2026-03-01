@@ -30,6 +30,9 @@ app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
 
+// AUTH ROUTES
+app.use("/api/auth", require("./routers/authRoutes"));
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

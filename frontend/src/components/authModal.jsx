@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaYoutube } from "react-icons/fa";
 import { signInSuccess } from '../redux/userSlice';
+import axios from 'axios';
 
 export default function AuthModal({ isOpen, onClose }) {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -21,6 +22,15 @@ export default function AuthModal({ isOpen, onClose }) {
         };
 
         dispatch(signInSuccess(mockUser));
+
+        // post request to backend
+        axios.post('http://localhost:5000/api/auth/signup', formData)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
         onClose();
     };
 
@@ -76,7 +86,7 @@ export default function AuthModal({ isOpen, onClose }) {
                             onClick={() => setIsSignUp(!isSignUp)}
                             className="text-blue-600 font-medium hover:text-blue-700 transition"
                         >
-                            {isSignUp ? "Sign in instead" : "Create account"}
+                            {isSignUp ? "Sign in" : "Sign up"}
                         </button>
 
                         <button
