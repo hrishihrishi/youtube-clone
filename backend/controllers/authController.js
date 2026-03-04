@@ -46,7 +46,8 @@ exports.signInUsingEmailAndPassword = async (req, res) => {
         // ASK USER TO SIGNUP INSTEAD.
         if (!user) {
             console.log("User not found");
-            return res.status(404).json({ error: 'User not found' });
+            alert("User not found try to signup");
+            return res.status(404).json({ error: 'User not found try to signup' });
         }
 
         // VERIFY PASSWORD.

@@ -5,6 +5,7 @@ import { signInSuccess } from '../redux/userSlice';
 import axios from 'axios';
 
 export default function AuthModal({ isOpen, onClose }) {
+    // used for handling signup and signin UI.
     const [isSignUp, setIsSignUp] = useState(false);
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
     const dispatch = useDispatch();
@@ -30,7 +31,8 @@ export default function AuthModal({ isOpen, onClose }) {
             .catch((error) => {
                 // THIS IS GETTING TRIGGERED.
                 console.error(error);
-                alert(error.response?.data.message || "Authentication failed");
+                alert("User not found !, try to SignUp instead !");
+                setIsSignUp(true);
             });
     };
 
