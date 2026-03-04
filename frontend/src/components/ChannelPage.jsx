@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import VideoCard from './VideoCard';
 import { videoData } from '../data/videos';
+import { useSelector } from 'react-redux';
 
 export default function ChannelPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -19,14 +21,35 @@ export default function ChannelPage() {
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=CodeAcademy"
   };
 
+  const { isSignedIn, currentUser } = useSelector((state) => state.user);
+  const [userDetails, setUserDetails] = useState(null);
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/getUserDetails', { email: currentUser?.email });
+      setUserDetails(response.data.user);
+    } catch (error) {
+      console.log("Error fetching user details:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    if (currentUser?.email) {
+      fetchUserDetails();
+    }
+  }, [currentUser?.email]);
+
+
+
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
-      
+
       {/* 1. Channel Banner */}
       <div className="w-full h-[16vw] min-h-[150px] max-h-[250px] overflow-hidden">
-        <img 
-          src={channel.bannerUrl} 
-          alt="Banner" 
+        <img
+          src={channel.bannerUrl}
+          alt="Banner"
           className="w-full h-full object-cover"
         />
       </div>
@@ -35,31 +58,33 @@ export default function ChannelPage() {
       <div className="max-w-[1284px] mx-auto px-4 py-6 flex flex-col md:flex-row gap-6 items-start md:items-center w-full">
         {/* Channel Icon */}
         <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 border border-gray-100">
-          <img src={channel.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+          {/* use first letter of channel name */}
+          <div className="w-full h-full flex items-center justify-center text-9xl font-extrabold text-gray-600">
+            {currentUser?.username[0] || channel.name[0]}
+          </div>
         </div>
 
         {/* Channel Details */}
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold">{channel.name}</h1>
+          <h1 className="text-4xl font-bold">{userDetails?.channel || currentUser?.username}</h1>
           <div className="flex gap-2 text-sm text-gray-600 font-medium">
-            <span>{channel.handle}</span>
+            <span>@{userDetails?.username?.toLowerCase()}</span>
             <span>•</span>
-            <span>{channel.subscribers} subscribers</span>
+            <span>{userDetails?.subscribersCount || 0} subscribers</span>
             <span>•</span>
-            <span>{channel.videoCount}</span>
+            <span>{userDetails?.ownVideos?.length || 0} videos</span>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl line-clamp-1 hover:line-clamp-none cursor-pointer">
             {channel.description}
           </p>
-          
+
           <div className="mt-2">
-            <button 
+            <button
               onClick={() => setIsSubscribed(!isSubscribed)}
-              className={`px-4 py-2 rounded-full font-medium transition ${
-                isSubscribed 
-                  ? 'bg-gray-100 text-black hover:bg-gray-200' 
-                  : 'bg-black text-white hover:bg-zinc-800'
-              }`}
+              className={`px-4 py-2 rounded-full font-medium transition ${isSubscribed
+                ? 'bg-gray-100 text-black hover:bg-gray-200'
+                : 'bg-black text-white hover:bg-zinc-800'
+                }`}
             >
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
@@ -74,11 +99,10 @@ export default function ChannelPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 text-sm font-semibold transition-colors whitespace-nowrap border-b-2 ${
-                activeTab === tab 
-                  ? 'border-black text-black' 
-                  : 'border-transparent text-gray-600 hover:text-black'
-              }`}
+              className={`py-3 text-sm font-semibold transition-colors whitespace-nowrap border-b-2 ${activeTab === tab
+                ? 'border-black text-black'
+                : 'border-transparent text-gray-600 hover:text-black'
+                }`}
             >
               {tab}
             </button>

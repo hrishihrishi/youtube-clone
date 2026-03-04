@@ -86,3 +86,19 @@ exports.signOut = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+
+exports.getUserDetails = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            console.log("User not found while fetching getUserDetails");
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ user });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}

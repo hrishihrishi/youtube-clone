@@ -28,7 +28,7 @@ export default function YoutubeHeader({ onMenuClick }) {
     <header className="flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50">
 
       {/* Left: Menu & Logo */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4" onClick={() => Navigate('/')}>
         <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer" onClick={onMenuClick}>
           <RxHamburgerMenu size={22} />
         </button>
