@@ -4,7 +4,7 @@ import { MdClose, MdFileUpload, MdOutlinePhotoLibrary } from 'react-icons/md';
 
 export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen }) {
   const currentUser = useSelector((state) => state.user.currentUser);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -31,7 +31,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
     // Auto-populated data structure
     const finalVideoData = {
       ...formData,
-      owner: currentUser?.name || "Anonymous", // From Redux
+      owner: currentUser?.username || "Anonymous", // From Redux
       uploadDate: new Date().toLocaleDateString(),
       uploadTime: new Date().toLocaleTimeString(),
       views: 0,
@@ -48,11 +48,11 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-xl font-bold">Upload video</h2>
-          <button 
+          <button
             onClick={() => setIsUploadModalOpen(false)}
             className="p-2 hover:bg-gray-100 rounded-full transition"
           >
@@ -62,12 +62,12 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-          
+
           {/* Left Side: Text Inputs */}
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Title (required)</label>
-              <input 
+              <input
                 name="title"
                 required
                 className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none"
@@ -78,7 +78,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Description</label>
-              <textarea 
+              <textarea
                 name="description"
                 rows="5"
                 className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none resize-none"
@@ -89,7 +89,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Category</label>
-              <select 
+              <select
                 name="category"
                 className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none bg-white"
                 onChange={handleInputChange}
@@ -114,16 +114,16 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
                 <p className="font-semibold text-gray-700">Select Video File</p>
                 <p className="text-xs text-gray-500 mt-1">MP4, WEBM, or MOV</p>
               </div>
-              <input 
-                type="file" 
-                id="videoInput" 
+              <input
+                type="file"
+                id="videoInput"
                 name="videoFile"
-                accept="video/*" 
-                className="hidden" 
+                accept="video/*"
+                className="hidden"
                 onChange={handleFileChange}
               />
-              <label 
-                htmlFor="videoInput" 
+              <label
+                htmlFor="videoInput"
                 className="bg-blue-600 text-white px-6 py-2 rounded font-medium cursor-pointer hover:bg-blue-700 transition"
               >
                 SELECT FILE
@@ -135,16 +135,16 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Thumbnail</label>
               <div className="flex items-center gap-4">
-                <input 
-                  type="file" 
-                  id="thumbInput" 
+                <input
+                  type="file"
+                  id="thumbInput"
                   name="thumbnail"
-                  accept="image/*" 
-                  className="hidden" 
+                  accept="image/*"
+                  className="hidden"
                   onChange={handleFileChange}
                 />
-                <label 
-                  htmlFor="thumbInput" 
+                <label
+                  htmlFor="thumbInput"
                   className="w-32 h-20 border border-gray-300 rounded-md flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-50 transition border-dashed"
                 >
                   <MdOutlinePhotoLibrary className="text-gray-400" size={24} />
@@ -152,7 +152,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
                 </label>
                 {formData.thumbnail && (
                   <div className="h-20 w-32 rounded bg-gray-100 flex items-center justify-center text-[10px] text-center p-2 truncate">
-                     {formData.thumbnail.name}
+                    {formData.thumbnail.name}
                   </div>
                 )}
               </div>
@@ -162,13 +162,13 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
         {/* Footer */}
         <div className="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
-          <button 
+          <button
             onClick={() => setIsUploadModalOpen(false)}
             className="px-4 py-2 hover:bg-gray-200 rounded-full font-medium transition"
           >
             Cancel
           </button>
-          <button 
+          <button
             onClick={handleSubmit}
             className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition"
           >

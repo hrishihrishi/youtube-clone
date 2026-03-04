@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default function AuthModal({ isOpen, onClose }) {
     const [isSignUp, setIsSignUp] = useState(false);
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
     const dispatch = useDispatch();
 
     if (!isOpen) return null;
@@ -14,24 +14,24 @@ export default function AuthModal({ isOpen, onClose }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Mock user data for demonstration
-        const mockUser = {
-            name: formData.name || "Alex Chen",
-            email: formData.email,
-            handle: (formData.name || "AlexChen").toLowerCase().replace(/\s/g, ''),
-        };
+        // Determine correct endpoint based on mode
+        const url = isSignUp
+            ? 'http://localhost:5000/api/auth/signup'
+            : 'http://localhost:5000/api/auth/signin';
 
-        dispatch(signInSuccess(mockUser));
-
-        // post request to backend
-        axios.post('http://localhost:5000/api/auth/signup', formData)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-        onClose();
+        axios.post(url, formData)
+            .then((response) => {
+                console.log(response.data);
+                // Get user data from response (handling both {user, token} and {user, token} formats)
+                const userData = response.data.user || response.data;
+                dispatch(signInSuccess(userData));
+                onClose();
+            })
+            .catch((error) => {
+                // THIS IS GETTING TRIGGERED.
+                console.error(error);
+                alert(error.response?.data.message || "Authentication failed");
+            });
     };
 
     return (
@@ -57,10 +57,10 @@ export default function AuthModal({ isOpen, onClose }) {
                     {isSignUp && (
                         <input
                             type="text"
-                            placeholder="Name"
+                            placeholder="Username"
                             required
                             className="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                         />
                     )}
 

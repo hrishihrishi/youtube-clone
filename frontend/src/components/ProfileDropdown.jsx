@@ -7,11 +7,11 @@ export default function ProfileDropdown({ user, onSignOut }) {
       {/* User Info Section */}
       <div className="flex gap-4 px-4 py-3 border-b border-gray-100">
         <div className="h-10 w-10 rounded-full bg-blue-600 flex-shrink-0 flex items-center justify-center text-white font-bold">
-          {user.name.charAt(0)}
+          {user?.username?.charAt(0) || user?.name?.charAt(0) || "U"}
         </div>
         <div className="flex flex-col overflow-hidden">
-          <p className="font-medium text-base truncate">{user.name}</p>
-          <p className="text-sm text-gray-600 truncate">@{user.handle}</p>
+          <p className="font-medium text-base truncate">{user?.username || user?.name}</p>
+          <p className="text-sm text-gray-600 truncate">@{user?.username?.toLowerCase() || user?.handle}</p>
           <a href="/ChannelPage" className="text-blue-600 text-sm mt-2 hover:underline">View your channel</a>
         </div>
       </div>

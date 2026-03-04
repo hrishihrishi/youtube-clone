@@ -116,12 +116,12 @@ export default function YoutubeHeader({ onMenuClick }) {
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
               className="hidden sm:flex w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
             >
-              {currentUser?.name?.charAt(0) || "A"}
+              {currentUser?.username?.charAt(0) || currentUser?.name?.charAt(0) || "U"}
             </button>
 
             {isProfileDropdownOpen && (
               <ProfileDropdown
-                user={currentUser || { name: 'User', handle: 'user123' }}
+                user={currentUser || { username: 'User', name: 'User', handle: 'user123' }}
                 onSignOut={handleSignOut}
               />
             )}
