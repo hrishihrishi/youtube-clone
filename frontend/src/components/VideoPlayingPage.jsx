@@ -2,13 +2,35 @@ import { useState } from 'react';
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt } from "react-icons/ai";
 import { TfiMoreAlt } from "react-icons/tfi";
 import { videoData } from './../data/videos.jsx'; 
-import { fetchVideoDetails } from '../utils/api'; 
+import { useEffect } from 'react';
+import axios from 'axios';
+// import { fetchVideoDetails } from '../utils/api'; 
 
 import VideoCard from './VideoCard';
+import { useSearchParams } from 'react-router-dom';
 
 export default function VideoPlayingPage() {
-    // const { videoId } = useParams(); // For dynamic routing in the future
-    // const videoDetails = fetchVideoDetails(videoId);
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('id'); // Get ID from query string (?id=...)
+    const [videoDetails, setVideoDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        // if (!id) return;
+        axios.get(`http://localhost:5000/api/videos/getVideoDetails/${id}`)
+        .then(res => {
+            console.log(res.data);
+            setVideoDetails(res.data);
+            console.log(videoDetails);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log("Error fetching video details (in VideoPlayingPage.js):", err);
+        })
+    }, [id]);
+
+    // PREVENT CRASH: Show loading state until videoDetails is fetched
+    
 
 
     const [liked, setLiked] = useState(false);
@@ -50,7 +72,13 @@ export default function VideoPlayingPage() {
 
                 {/* Video Player */}
                 <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow-lg">
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                    {loading ? (
+                        <div className="flex items-center justify-center h-full">
+                            <p>Loading video...</p>
+                        </div>
+                    ) : (
+                        <iframe width="100%" height="100%" src={"http://localhost:5000/api/videos/stream/" + videoDetails.video} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                    )}
                 </div>
 
                 {/* Video Title */}

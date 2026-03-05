@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from './VideoCard';
-import { videoData } from '../data/videos';
+// import { videoData } from '../data/videos';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function ChannelPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -21,27 +22,31 @@ export default function ChannelPage() {
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=CodeAcademy"
   };
 
-//   const videoData = [{/** 
-// * Paste one or more documents here
-// */
-//   "title": "r1",
-//   "category": "Entertainment",
-//   "description": "r1d",
-//   "thumbnail": "d76812ff0a34097008b285f1c75b1f9c.png",
-//   "video": "303048b2c0490fcb311d95b95c6d1d54.webm",
-//   "channel": "krsna",
-//   "likes": 0,
-//   "dislikes": 0,
-//   "views": 0,
-//   "videoId": {
-//     "$date": "2026-03-05T09:02:49.851Z"
-//   },
-//   "comments": [],
-//   "dateTime": {
-//     "$date": "2026-03-05T09:02:49.851Z"
-//   },
-//   "__v": 0
-// }];
+
+
+  const navigate = useNavigate();
+  const [videoData, setVideoData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/videos/getAllVideos');
+        console.log('response');
+        console.log('videos', response.data);
+        setVideoData(response.data);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVideos();
+  }, []);
+
+
+
+
 
   const { isSignedIn, currentUser } = useSelector((state) => state.user);
   const [userDetails, setUserDetails] = useState(null);
@@ -137,7 +142,9 @@ export default function ChannelPage() {
         {activeTab === "Videos" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
             {videoData.map((video) => (
-              <VideoCard key={video.videoId} video={video} />
+              <div key={video.videoId} onClick={() => navigate(`/VideoPlaying?id=${video._id}`)} className="cursor-pointer">
+                <VideoCard video={video} />
+              </div>
             ))}
           </div>
         ) : (

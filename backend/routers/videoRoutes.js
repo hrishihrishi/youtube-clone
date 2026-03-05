@@ -9,7 +9,14 @@ router.post('/upload', upload.fields([
   { name: 'thumbnail', maxCount: 1 }
 ]), videoController.uploadVideoData);
 
+
+
 // Route for the frontend <video src="..."> tag
 router.get('/stream/:filename', videoController.streamVideo);
+
+// Get all videos
+router.get('/getAllVideos', videoController.getAllVideos);
+
+router.get('/getVideoDetails/:id', videoController.getVideoDetails);
 
 module.exports = router;

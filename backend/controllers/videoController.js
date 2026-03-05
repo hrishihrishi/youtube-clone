@@ -35,6 +35,8 @@ exports.uploadVideoData = async (req, res) => {
 
 // 2. STREAM VIDEO FILE
 exports.streamVideo = (req, res) => {
+    console.log(req.params.filename);
+    console.log('streaming started');
     // openDownloadStreamByName looks for the file in the chunks collection
     const stream = gfs.openDownloadStreamByName(req.params.filename);
 
@@ -42,11 +44,32 @@ exports.streamVideo = (req, res) => {
         res.write(chunk); // Sending small packets of data to the client
     });
 
-    stream.on('error', () => {
-        res.status(404).json({ message: "Video not found" });
+    stream.on('error', (err) => {
+        res.status(404).json({error :err.message,  message: "Video not found" });
     });
 
     stream.on('end', () => {
         res.end(); // Closing connection once stream is finished
     });
 };
+
+exports.getAllVideos = async (req, res) => {
+    try {
+        const videos = await Video.find();
+        res.status(200).json(videos);
+    } catch (err) {
+        console.log('error from controllers',err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getVideoDetails = async (req, res) => {
+    try {
+        const video = await Video.findById(req.params.id);
+        res.status(200).json(video);
+    } catch (err) {
+        console.log('error from controllers',err);
+        res.status(500).json({ error: err.message });
+    }
+};
+    
