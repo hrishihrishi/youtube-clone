@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MdClose, MdFileUpload, MdOutlinePhotoLibrary } from 'react-icons/md';
+import axios from 'axios';
 
 export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen }) {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -25,25 +26,41 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
     setFormData((prev) => ({ ...prev, [name]: files[0] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Auto-populated data structure
-    const finalVideoData = {
-      ...formData,
-      owner: currentUser?.username || "Anonymous", // From Redux
-      uploadDate: new Date().toLocaleDateString(),
-      uploadTime: new Date().toLocaleTimeString(),
-      views: 0,
-      likes: 0,
-      dislikes: 0,
-      comments: [],
-    };
+    if (!formData.videoFile || !formData.thumbnail) {
+      alert("Please select both a video and a thumbnail.");
+      return;
+    }
 
-    console.log("Submitting to Database:", finalVideoData);
-    // Add your Firebase/API upload logic here
-    setIsUploadModalOpen(false);
+    // Use FormData for file uploads
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("category", formData.category);
+    data.append("video", formData.videoFile); // Field name for the backend
+    data.append("thumbnail", formData.thumbnail);
+    data.append("channel", currentUser?.username || "Anonymous"); // Match model "channel" field
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/videos/upload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Video uploaded successfully");
+      console.log("Video uploaded successfully:", response.data);
+      setIsUploadModalOpen(false);
+    } catch (error) {
+      alert("Error uploading video");
+      console.error("Error uploading video:", error.response?.data || error.message);
+    }
   };
+
+
+
+
 
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -65,6 +82,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
           {/* Left Side: Text Inputs */}
           <div className="flex flex-col gap-6">
+
+            {/* TITLE */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Title (required)</label>
               <input
@@ -76,6 +95,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               />
             </div>
 
+            {/* DESCRIPTION */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Description</label>
               <textarea
@@ -87,6 +107,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               />
             </div>
 
+            {/* CATEGORY */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Category</label>
               <select
@@ -105,7 +126,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
           {/* Right Side: File Uploads */}
           <div className="flex flex-col gap-6">
-            {/* Video File Input */}
+
+            {/* VIDEO FILE INPUT */}
             <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 bg-gray-50">
               <div className="p-4 bg-white rounded-full shadow-sm text-gray-500">
                 <MdFileUpload size={40} />
@@ -131,7 +153,7 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               {formData.videoFile && <span className="text-xs text-green-600 font-bold">{formData.videoFile.name}</span>}
             </div>
 
-            {/* Thumbnail Input */}
+            {/* THUMBNAIL INPUT */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">Thumbnail</label>
               <div className="flex items-center gap-4">
@@ -158,23 +180,24 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               </div>
             </div>
           </div>
-        </form>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
-          <button
-            onClick={() => setIsUploadModalOpen(false)}
-            className="px-4 py-2 hover:bg-gray-200 rounded-full font-medium transition"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition"
-          >
-            Publish
-          </button>
-        </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
+            <button
+              onClick={() => setIsUploadModalOpen(false)}
+              className="px-4 py-2 hover:bg-gray-200 rounded-full font-medium transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition"
+            >
+              Publish
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

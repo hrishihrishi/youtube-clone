@@ -23,10 +23,13 @@ app.get("/", (req, res) => {
 // AUTH ROUTES
 app.use("/api/auth", require("./routers/authRoutes"));
 
+// Video ROUTES
+app.use("/api/videos", require("./routers/videoRoutes"));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(500).json({ error: err.message });
 });
 
 // 404 handler

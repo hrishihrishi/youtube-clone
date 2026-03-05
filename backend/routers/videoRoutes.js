@@ -1,0 +1,15 @@
+const express = require('express');
+const router = express.Router();
+const { upload } = require('../config/gridFsConfig');
+const videoController = require('../controllers/videoController');
+
+// .fields allows us to upload multiple types of files at once
+router.post('/upload', upload.fields([
+  { name: 'video', maxCount: 1 },
+  { name: 'thumbnail', maxCount: 1 }
+]), videoController.uploadVideoData);
+
+// Route for the frontend <video src="..."> tag
+router.get('/stream/:filename', videoController.streamVideo);
+
+module.exports = router;
