@@ -29,6 +29,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    alert("Uploading video...");
+
     if (!formData.videoFile || !formData.thumbnail) {
       alert("Please select both a video and a thumbnail.");
       return;

@@ -21,6 +21,28 @@ export default function ChannelPage() {
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=CodeAcademy"
   };
 
+//   const videoData = [{/** 
+// * Paste one or more documents here
+// */
+//   "title": "r1",
+//   "category": "Entertainment",
+//   "description": "r1d",
+//   "thumbnail": "d76812ff0a34097008b285f1c75b1f9c.png",
+//   "video": "303048b2c0490fcb311d95b95c6d1d54.webm",
+//   "channel": "krsna",
+//   "likes": 0,
+//   "dislikes": 0,
+//   "views": 0,
+//   "videoId": {
+//     "$date": "2026-03-05T09:02:49.851Z"
+//   },
+//   "comments": [],
+//   "dateTime": {
+//     "$date": "2026-03-05T09:02:49.851Z"
+//   },
+//   "__v": 0
+// }];
+
   const { isSignedIn, currentUser } = useSelector((state) => state.user);
   const [userDetails, setUserDetails] = useState(null);
 
