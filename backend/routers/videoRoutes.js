@@ -19,4 +19,6 @@ router.get('/getAllVideos', videoController.getAllVideos);
 
 router.get('/getVideoDetails/:id', videoController.getVideoDetails);
 
+router.post('/updateVideoDetails/:id', videoController.updateVideoDetails);
+
 module.exports = router;

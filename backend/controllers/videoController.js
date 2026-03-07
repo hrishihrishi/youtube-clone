@@ -72,4 +72,13 @@ exports.getVideoDetails = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-    
+
+exports.updateVideoDetails = async (req, res) => {
+    try {
+        const video = await Video.findByIdAndUpdate(req.params.id, req.body);
+        res.status(200).json(video);
+    } catch (err) {
+        console.log('error from controllers',err);
+        res.status(500).json({ error: err.message });
+    }
+};
