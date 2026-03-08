@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MdClose, MdFileUpload, MdOutlinePhotoLibrary } from 'react-icons/md';
 import axios from 'axios';
+import '../index.css';
+
 
 export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen }) {
   const currentUser = useSelector((state) => state.user.currentUser);

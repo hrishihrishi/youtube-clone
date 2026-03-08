@@ -21,4 +21,8 @@ router.get('/getVideoDetails/:id', videoController.getVideoDetails);
 
 router.post('/updateVideoDetails/:id', videoController.updateVideoDetails);
 
+router.delete('/deleteVideo/:id', videoController.deleteVideo);
+
+router.get('/getFilteredVideos/:searchSentence', videoController.getFilteredVideos);
+
 module.exports = router;

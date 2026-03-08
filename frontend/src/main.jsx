@@ -16,10 +16,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <VideoGrid />},
-      { path: "VideoPlaying", element: <VideoPlayingPage />},
-      { path: "ChannelPage", element: <ChannelPage />},
-      { path: "SearchPage", element: <SearchPage />}
+      { index: true, element: <VideoGrid /> },
+      { path: "VideoPlaying", element: <VideoPlayingPage /> },
+      { path: "ChannelPage", element: <ChannelPage /> },
+      { path: "SearchPage", element: <SearchPage /> }
     ]
   },
   // { path: "/VideoPlaying", element: <VideoPlayingPage />}

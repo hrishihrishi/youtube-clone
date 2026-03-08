@@ -82,3 +82,25 @@ exports.updateVideoDetails = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.deleteVideo = async (req, res) => {
+    try {
+        const video = await Video.findByIdAndDelete(req.params.id);
+        res.status(200).json(video);
+    } catch (err) {
+        console.log('error from controllers', err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getFilteredVideos = async (req, res) => {
+    try {
+        const videos = await Video.find({
+            title: { $regex: req.params.searchSentence, $options: 'i' }
+        });
+        res.status(200).json(videos);
+    } catch (err) {
+        console.log('error from controllers', err);
+        res.status(500).json({ error: err.message });
+    }
+};

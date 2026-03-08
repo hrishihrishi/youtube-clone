@@ -1,5 +1,6 @@
 import { MdOutlineAccountBox, MdOutlineLogin, MdOutlineSettings, MdHelpOutline } from "react-icons/md";
 import { SiGooglecloud } from "react-icons/si";
+import '../index.css';
 
 // MODAL FOR PROFILE AND SETTINGS OPTIONS
 export default function ProfileDropdown({ user, onSignOut }) {

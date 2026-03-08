@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from './VideoCard';
 import { useSearchParams } from 'react-router-dom';
+import '../index.css';
 
 
 // PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.

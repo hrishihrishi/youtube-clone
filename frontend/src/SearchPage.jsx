@@ -1,45 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchPageVideoCard from './components/SearchPageVideoCard';
-import { videoData } from './data/videos';
+import { fetchFilteredVideos } from './service/videoservice';
+import { useSearchParams } from 'react-router-dom';
 
+export default function SearchPage({ isSidebarOpen = false }) {
+  const [filteredVideos, setFilteredVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-// RENDERS VIDEO CARDS BASED ON SEARCH SENTENCE
-export default function SearchPage({ isSidebarOpen=false, searchSentence='' }) {
-  
-  // 1. Search Algorithm
-  const filterVideos = () => {
-    if (!searchSentence) return videoData;
+  const [searchParams] = useSearchParams();
+  const searchSentence = searchParams.get('searchSentence');
 
-    // Split search sentence into lowercase words
-    const searchKeys = searchSentence.toLowerCase().split(' ').filter(word => word !== '');
+    // Handle empty search sentence by showing a helper message or nothing
+  if (!searchSentence) {
+    console.log("No search sentence provided");
+    return (
+      <div className={`p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
+        <p className="text-center text-gray-500 mt-10">Type something to search...</p>
+      </div>
+    );
+  }
 
-    return videoData.filter((video) => {
-      const title = video.title.toLowerCase();
-      // Check if any search key is present in the title
-      return searchKeys.some((key) => title.includes(key));
-    });
-  };
-  const filteredVideos = filterVideos();
+  useEffect(() => {
+    if (!searchSentence) return;
+
+    setLoading(true);
+    fetchFilteredVideos(searchSentence)
+      .then(data => {
+        setFilteredVideos(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [searchSentence]);
 
   return (
     <div className={`transition-all duration-300 p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
       <div className="max-w-[1100px] mx-auto flex flex-col gap-4">
         
-        {/* Search Stats */}
-        <p className="text-sm text-gray-600 mb-2">
-          About {filteredVideos.length} results for "{searchSentence}"
-        </p>
-
-        {/* Results List */}
-        {filteredVideos.length > 0 ? (
-          filteredVideos.map((video) => (
-            <SearchPageVideoCard key={video.videoId} video={video} />
-          ))
+        {loading ? (
+          <p className="text-center text-gray-600 mt-10">Searching for "{searchSentence}"...</p>
         ) : (
-          <div className="flex flex-col items-center mt-20">
-            <h2 className="text-xl font-medium">No results found</h2>
-            <p className="text-gray-500">Try different keywords or more general terms.</p>
-          </div>
+          <>
+            <p className="text-sm text-gray-600 mb-2">
+              About {filteredVideos.length} results for "{searchSentence}"
+            </p>
+
+            {filteredVideos.length > 0 ? (
+              filteredVideos.map((video) => (
+                <SearchPageVideoCard key={video._id} video={video} />
+              ))
+            ) : (
+              <div className="flex flex-col items-center mt-20">
+                <h2 className="text-xl font-medium">No results found</h2>
+                <p className="text-gray-500">Try different keywords or more general terms.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

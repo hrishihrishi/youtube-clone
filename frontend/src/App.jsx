@@ -113,7 +113,6 @@ export default function App() {
       <main className="p-4">
         {/* Your video grid goes here */}
         <Outlet />
-        <h1 className="text-2xl font-bold">Recommended Videos</h1>
       </main>
 
     </div>

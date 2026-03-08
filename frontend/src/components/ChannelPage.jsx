@@ -4,6 +4,8 @@ import VideoCard from './VideoCard';
 // import { videoData } from '../data/videos';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import '../index.css';
+
 
 // CHANNEL PAGE (CONNECTED TO DB)
 export default function ChannelPage() {
@@ -88,7 +90,7 @@ export default function ChannelPage() {
         <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 border border-gray-100">
           {/* use first letter of channel name */}
           <div className="w-full h-full flex items-center justify-center text-9xl font-extrabold text-gray-600">
-            {currentUser?.username[0] || channel.name[0]}
+            {currentUser?.username[0].toUpperCase() || channel.name[0].toUpperCase()}
           </div>
         </div>
 

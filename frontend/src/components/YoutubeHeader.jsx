@@ -9,6 +9,7 @@ import AuthModal from './authModal';
 import ProfileDropdown from './ProfileDropdown';
 import UploadModal from './UploadModal';
 import { useNavigate } from 'react-router-dom';
+import '../index.css';
 
 // YOUTUBE HEADER (CONNECTED TO REDUX)
 export default function YoutubeHeader({ onMenuClick }) {
@@ -26,6 +27,7 @@ export default function YoutubeHeader({ onMenuClick }) {
   };
 
   return (
+    <>
     <header className="flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50">
 
       {/* Left: Menu & Logo */}
@@ -54,12 +56,13 @@ export default function YoutubeHeader({ onMenuClick }) {
               className="w-full outline-none text-base"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && Navigate('/SearchPage?searchSentence=' + search)}
             />
           </div>
 
           {/* SEARCH ICON */}
           <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer"
-            onClick={() => Navigate('/SearchPage')}
+            onClick={() => Navigate('/SearchPage?searchSentence=' + search)}
           >
             <AiOutlineSearch size={22} />
           </button>
@@ -117,7 +120,7 @@ export default function YoutubeHeader({ onMenuClick }) {
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
               className="hidden sm:flex w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
             >
-              {currentUser?.username?.charAt(0) || currentUser?.name?.charAt(0) || "U"}
+              {currentUser?.username?.charAt(0).toUpperCase() || currentUser?.name?.charAt(0).toUpperCase() || "U"}
             </button>
 
             {isProfileDropdownOpen && (
@@ -144,5 +147,9 @@ export default function YoutubeHeader({ onMenuClick }) {
       />
 
     </header>
+    <div>
+      
+    </div>
+    </>
   );
 }
