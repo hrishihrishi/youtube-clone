@@ -158,7 +158,7 @@ export default function YoutubeHeader({ onMenuClick }) {
             onClick={() => {
               const params = new URLSearchParams(searchParams);
               if (tag === "All") {
-                params.delete("category");
+                Navigate('/SearchPage');
               } else {
                 params.set("category", tag);
               }
