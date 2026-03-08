@@ -8,34 +8,35 @@ export default function SearchPage({ isSidebarOpen = false }) {
   const [loading, setLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const searchSentence = searchParams.get('searchSentence');
+  const searchSentence = searchParams.get('searchSentence') || "";
+  const category = searchParams.get('category') || "";
 
-    // Handle empty search sentence by showing a helper message or nothing
-  if (!searchSentence) {
-    console.log("No search sentence provided");
-    return (
-      <div className={`p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
-        <p className="text-center text-gray-500 mt-10">Type something to search...</p>
-      </div>
-    );
-  }
+
 
   useEffect(() => {
-    if (!searchSentence) return;
-
+    // Handle empty search sentence by showing a helper message or nothing
+    if (!searchSentence && !category) {
+      console.log("No search sentence or category provided");
+      return (
+        <div className={`p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
+          <p className="text-center text-gray-500 mt-10">Type something to search...</p>
+        </div>
+      );
+    }
+    
     setLoading(true);
-    fetchFilteredVideos(searchSentence)
+    fetchFilteredVideos(searchSentence, category)
       .then(data => {
         setFilteredVideos(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [searchSentence]);
+  }, [searchSentence, category]);
 
   return (
     <div className={`transition-all duration-300 p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
       <div className="max-w-[1100px] mx-auto flex flex-col gap-4">
-        
+
         {loading ? (
           <p className="text-center text-gray-600 mt-10">Searching for "{searchSentence}"...</p>
         ) : (

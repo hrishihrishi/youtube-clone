@@ -95,9 +95,20 @@ exports.deleteVideo = async (req, res) => {
 
 exports.getFilteredVideos = async (req, res) => {
     try {
-        const videos = await Video.find({
-            title: { $regex: req.params.searchSentence, $options: 'i' }
-        });
+        const { searchSentence, category } = req.query;
+        let query = {};
+
+        // If searchSentence exists, filter by title (case-insensitive)
+        if (searchSentence) {
+            query.title = { $regex: searchSentence, $options: 'i' };
+        }
+
+        // If category exists, filter by category
+        if (category && category !== "All") {
+            query.category = category;
+        }
+
+        const videos = await Video.find(query);
         res.status(200).json(videos);
     } catch (err) {
         console.log('error from controllers', err);

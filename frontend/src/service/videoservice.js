@@ -1,10 +1,15 @@
 import axios from "axios";
 
-export const fetchFilteredVideos = async (searchSentence) => {
+export const fetchFilteredVideos = async (searchSentence="", category="") => {
     const searchKeys = searchSentence.toLowerCase().split(' ').filter(word => word !== '');
 
     try {
-        const response = await axios.get('http://localhost:5000/api/videos/getFilteredVideos/' + searchSentence);
+        const response = await axios.get('http://localhost:5000/api/videos/getFilteredVideos', {
+            params: {
+                searchSentence,
+                category
+            }
+        });
         // const filteredVideos = response.data.filter((video) => {
         //     return searchKeys.some((key) => video.title.toLowerCase().includes(key));
         // })
@@ -14,5 +19,6 @@ export const fetchFilteredVideos = async (searchSentence) => {
 
     } catch (error) {
         console.log(error);
+        return [];
     }
 }

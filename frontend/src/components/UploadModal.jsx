@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { MdClose, MdFileUpload, MdOutlinePhotoLibrary } from 'react-icons/md';
 import axios from 'axios';
 import '../index.css';
-
+import { tags } from '../config/tags';
 
 export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen }) {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -119,11 +119,11 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
                 className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none bg-white"
                 onChange={handleInputChange}
               >
-                <option>Education</option>
-                <option>Gaming</option>
-                <option>Music</option>
-                <option>Tech</option>
-                <option>Entertainment</option>
+                {
+                  tags.map((tag) => (
+                    <option key={tag}>{tag}</option>
+                  ))
+                }
               </select>
             </div>
           </div>
