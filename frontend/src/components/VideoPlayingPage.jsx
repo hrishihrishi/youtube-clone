@@ -9,7 +9,7 @@ import VideoCard from './VideoCard';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../index.css';
 import { fetchVideos } from '../utils/api.js';
-import { deleteVideo, fetchAllVideos } from '../service/videoservice.js';
+import { deleteVideo, fetchAllVideos, updateVidDetails } from '../service/videoservice.js';
 
 
 // PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.
@@ -155,6 +155,16 @@ export default function VideoPlayingPage() {
         }
     };
 
+    const onDeleteComment = (commentId) => {
+        try {
+            setComments(comments.filter(c => c.id !== commentId));
+            updateVidDetails(id, { comments: comments.filter(c => c.id !== commentId) });
+        }
+        catch (error) {
+            console.log("Error deleting comment (in VideoPlayingPage.js):", error);
+        }
+    };
+
     return (
         loading ? (
             <div className="flex items-center justify-center h-full">
@@ -278,6 +288,9 @@ export default function VideoPlayingPage() {
                                             <AiOutlineLike className="cursor-pointer" /> {c.likes}
                                             <AiOutlineDislike className="cursor-pointer" />
                                             <span className="font-bold cursor-pointer">Reply</span>
+                                            <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full" onClick={() => onDeleteComment(c.id)}>
+                                                <AiOutlineDelete size={15} />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

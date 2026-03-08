@@ -53,3 +53,17 @@ export const deleteVideo = async (id) => {
         }
     }
 }
+
+export const updateVidDetails = async (id, data) => {
+    try {
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, data)
+            .then(res => {
+                console.log("Video updated:", res.data);
+                return res.data
+            })
+            .catch(err => console.log(err))
+    } catch (error) {
+        console.error("Error updating video:", error);
+        return [];
+    }
+}
