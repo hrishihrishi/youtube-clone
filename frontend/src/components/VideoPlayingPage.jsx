@@ -1,21 +1,27 @@
 import { useState } from 'react';
-import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt } from "react-icons/ai";
+import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt, AiOutlineDelete } from "react-icons/ai";
+import { MdPlaylistAdd } from "react-icons/md";
 import { TfiMoreAlt } from "react-icons/tfi";
 import { videoData } from './../data/videos.jsx';
 import { useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from './VideoCard';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../index.css';
+import { fetchVideos } from '../utils/api.js';
+import { deleteVideo, fetchAllVideos } from '../service/videoservice.js';
 
 
 // PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.
 export default function VideoPlayingPage() {
+    // const [videoData, setVideoData] = useState([]);
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const id = searchParams.get('id'); // Get ID from query string (?id=...)
 
     const [videoDetails, setVideoDetails] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isMoreOpen, setIsMoreOpen] = useState(false);
 
 
     useEffect(() => {
@@ -30,7 +36,11 @@ export default function VideoPlayingPage() {
             .catch(err => {
                 console.log("Error fetching video details (in VideoPlayingPage.js):", err);
             })
+        // videoData = fetchAllVideos();
+        // console.log(videoData);
+        // if (!videoData) videoData = [];
     }, [id]);
+
 
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
@@ -131,6 +141,20 @@ export default function VideoPlayingPage() {
             })
     };
 
+    const onMoreClick = () => {
+        setIsMoreOpen(!isMoreOpen);
+    };
+
+    const onDeleteClick = () => {
+        try {
+            deleteVideo(id);
+            navigate('/');
+        }
+        catch (error) {
+            console.log("Error deleting video (in VideoPlayingPage.js):", error);
+        }
+    };
+
     return (
         loading ? (
             <div className="flex items-center justify-center h-full">
@@ -180,12 +204,39 @@ export default function VideoPlayingPage() {
                                     {disliked ? <AiFillDislike size={20} /> : <AiOutlineDislike size={20} />}
                                 </button>
                             </div>
+                            {/* SHARE BUTTON */}
                             <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium">
                                 <AiOutlineShareAlt size={20} /> Share
                             </button>
-                            <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
-                                <TfiMoreAlt />
-                            </button>
+                            {/* MORE BUTTON */}
+                            <div >
+                                <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full" onClick={onMoreClick}>
+                                    <TfiMoreAlt />
+                                </button>
+
+                                {isMoreOpen && (
+                                    <div className="absolute right-[10] mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                                        <button
+                                            onClick={() => {
+                                                console.log("Save to playlist");
+                                                setIsMoreOpen(false);
+                                            }}
+                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition text-sm font-medium"
+                                        >
+                                            <MdPlaylistAdd size={20} /> Save to playlist
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                onDeleteClick();
+                                                setIsMoreOpen(false);
+                                            }}
+                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition text-sm font-medium text-red-600"
+                                        >
+                                            <AiOutlineDelete size={20} /> Delete video
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 

@@ -32,14 +32,14 @@ export default function YoutubeHeader({ onMenuClick }) {
     <>
       <header className="flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50">
 
-        {/* Left: Menu & Logo */}
-        <div className="flex items-center gap-4" onClick={() => Navigate('/')}>
+        {/* Left: Menu */}
+        <div className="flex items-center gap-4">
           <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer" onClick={onMenuClick}>
             <RxHamburgerMenu size={22} />
           </button>
 
           {/* YOUTUBE LOGO AND ICON */}
-          <div className="hidden sm:flex items-center gap-1 cursor-pointer">
+          <div className="hidden sm:flex items-center gap-1 cursor-pointer" onClick={() => Navigate('/')}>
             <FaYoutube size={30} className="text-red-600" />
             <span className="font-bold text-xl tracking-tighter">YouTube</span>
           </div>
@@ -149,6 +149,8 @@ export default function YoutubeHeader({ onMenuClick }) {
         />
 
       </header>
+
+      {/* TAGS */}
       <div className="flex items-center gap-3 px-4 py-3 overflow-x-auto border-b border-gray-100 bg-white scrollbar-hide justify-around">
         {["All", ...tags].map((tag) => (
           <button

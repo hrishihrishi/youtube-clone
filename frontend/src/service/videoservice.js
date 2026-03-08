@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchFilteredVideos = async (searchSentence="", category="") => {
+export const fetchFilteredVideos = async (searchSentence = "", category = "") => {
     const searchKeys = searchSentence.toLowerCase().split(' ').filter(word => word !== '');
 
     try {
@@ -20,5 +20,36 @@ export const fetchFilteredVideos = async (searchSentence="", category="") => {
     } catch (error) {
         console.log(error);
         return [];
+    }
+}
+
+export const fetchAllVideos = async () => {
+    try {
+        axios.get('http://localhost:5000/api/videos/getAllVideos')
+            .then(res => {
+                console.log(res.data);
+                return res.data
+            })
+            .catch(err => console.log(err))
+    } catch (error) {
+        console.error("Error fetching videos:", error);
+        return [];
+    }
+};
+
+
+export const deleteVideo = async (id) => {
+    if (window.confirm("Are you sure you want to delete this video?")) {
+        try {
+            axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`)
+                .then(res => {
+                    console.log("Video deleted:", res.data);
+                    return res.data
+                })
+                .catch(err => console.log(err))
+        } catch (error) {
+            console.error("Error deleting video:", error);
+            return [];
+        }
     }
 }

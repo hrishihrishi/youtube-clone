@@ -45,9 +45,7 @@ export default function SearchPage({ isSidebarOpen = false }) {
             <p className="text-center text-gray-600 mt-10">Searching for "{searchSentence}"...</p>
           ) : (
             <>
-              <p className="text-sm text-gray-600 mb-2">
-                About {filteredVideos.length} results for "{searchSentence}"
-              </p>
+              {/* <p className="text-sm text-gray-600 mb-2">About {filteredVideos.length} results for "{searchSentence}"</p> */}
 
               {filteredVideos.length > 0 ? (
                 filteredVideos.map((video) => (
