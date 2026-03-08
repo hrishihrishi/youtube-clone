@@ -8,7 +8,7 @@ import { signOut } from '../redux/userSlice';
 import AuthModal from './authModal';
 import ProfileDropdown from './ProfileDropdown';
 import UploadModal from './UploadModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../index.css';
 import { tags } from '../config/tags';
 
@@ -19,6 +19,7 @@ export default function YoutubeHeader({ onMenuClick }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const Navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { isSignedIn, currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -152,10 +153,18 @@ export default function YoutubeHeader({ onMenuClick }) {
         {["All", ...tags].map((tag) => (
           <button
             key={tag}
-            onClick={() => Navigate(tag === "All" ? "/SearchPage" : `/SearchPage?category=${tag}`)}
+            onClick={() => {
+              const params = new URLSearchParams(searchParams);
+              if (tag === "All") {
+                params.delete("category");
+              } else {
+                params.set("category", tag);
+              }
+              Navigate(`/SearchPage?${params.toString()}`);
+            }}
             className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${tag === "All"
-                ? "bg-black text-white"
-                : "bg-gray-100 text-black hover:bg-gray-200"
+              ? "bg-black text-white"
+              : "bg-gray-100 text-black hover:bg-gray-200"
               }`}
           >
             {tag}
