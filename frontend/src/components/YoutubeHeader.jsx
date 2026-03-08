@@ -163,6 +163,7 @@ export default function YoutubeHeader({ onMenuClick }) {
                 params.set("category", tag);
               }
               Navigate(`/SearchPage?${params.toString()}`);
+              window.location.reload();
             }}
             className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${tag === "All"
               ? "bg-black text-white"
