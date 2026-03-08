@@ -2,19 +2,18 @@ import { useState } from 'react';
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt, AiOutlineDelete } from "react-icons/ai";
 import { MdPlaylistAdd } from "react-icons/md";
 import { TfiMoreAlt } from "react-icons/tfi";
-import { videoData } from './../data/videos.jsx';
+// import { videoData } from './../data/videos.jsx';
 import { useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from './VideoCard';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../index.css';
-import { fetchVideos } from '../utils/api.js';
 import { deleteVideo, fetchAllVideos, updateVidDetails } from '../service/videoservice.js';
 
 
 // PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.
 export default function VideoPlayingPage() {
-    // const [videoData, setVideoData] = useState([]);
+    const [videoData, setVideoData] = useState([]);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const id = searchParams.get('id'); // Get ID from query string (?id=...)
@@ -36,10 +35,14 @@ export default function VideoPlayingPage() {
             .catch(err => {
                 console.log("Error fetching video details (in VideoPlayingPage.js):", err);
             })
-        // videoData = fetchAllVideos();
-        // console.log(videoData);
-        // if (!videoData) videoData = [];
+        // Set loading logic already handled by second effect or separate state if needed
     }, [id]);
+
+    useEffect(() => {
+        fetchAllVideos().then(res => {
+            setVideoData(res);
+        })
+    }, []);
 
 
     const [liked, setLiked] = useState(false);
@@ -87,22 +90,6 @@ export default function VideoPlayingPage() {
             })
             .catch(err => console.log("Error during unlike:", err));
     };
-
-    // const handleLike = () => {
-    //     setLiked(!liked);
-
-    //     axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: videoDetails.likes + 1 })
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setVideoDetails(res.data);
-    //             setLikes(videoDetails.likes);
-    //         })
-    //         .catch(err => {
-    //             console.log("Error updating video details (in VideoPlayingPage.js):", err);
-    //         })
-
-    //     if (disliked) setDisliked(false);
-    // };
 
     const handleDislike = () => {
         setDisliked(!disliked);
@@ -301,19 +288,31 @@ export default function VideoPlayingPage() {
 
                 {/* RIGHT SIDE: RECOMMENDED VIDEOS */}
                 <div className="lg:w-[400px] flex flex-col gap-4">
-                    <h4 className="font-bold lg:hidden">Related Videos</h4>
-                    {videoData.map((v, index) => (
-                        <div key={index} className="flex gap-2">
-                            <div className="w-40 h-24 shrink-0 rounded-lg overflow-hidden">
-                                <img src={v.thumbnailUrl} className="w-full h-full object-cover" alt="thumbnail" />
+                    <h4 className="font-bold">Related Videos</h4>
+
+                    {videoData?.map((v, index) => (
+                        <div
+                            key={v._id || index}
+                            className="flex gap-2 cursor-pointer group"
+                            onClick={() => navigate(`/VideoPlaying?id=${v._id}`)}
+                        >
+                            <div className="w-40 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                                <img
+                                    src={`http://localhost:5000/api/videos/stream/${v.thumbnail}`}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                    alt="thumbnail"
+                                />
                             </div>
-                            <div className="flex flex-col">
-                                <h5 className="text-sm font-bold line-clamp-2">{v.title}</h5>
-                                <p className="text-xs text-gray-600 mt-1">{v.uploader}</p>
-                                <p className="text-xs text-gray-600">{v.views} views</p>
+                            <div className="flex flex-col pr-2">
+                                <h5 className="text-sm font-bold line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                                    {v.title}
+                                </h5>
+                                <p className="text-xs text-gray-600 mt-1 uppercase">{v.channel}</p>
+                                <p className="text-xs text-gray-600">{v.views} views • {new Date(v.dateTime).toLocaleDateString()}</p>
                             </div>
                         </div>
                     ))}
+
                 </div>
             </div>
         )

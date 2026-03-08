@@ -25,12 +25,9 @@ export const fetchFilteredVideos = async (searchSentence = "", category = "") =>
 
 export const fetchAllVideos = async () => {
     try {
-        axios.get('http://localhost:5000/api/videos/getAllVideos')
-            .then(res => {
-                console.log(res.data);
-                return res.data
-            })
-            .catch(err => console.log(err))
+        const res = await axios.get('http://localhost:5000/api/videos/getAllVideos');
+        console.log("Fetched all videos:", res.data);
+        return res.data;
     } catch (error) {
         console.error("Error fetching videos:", error);
         return [];
@@ -43,7 +40,7 @@ export const deleteVideo = async (id) => {
         try {
             axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`)
                 .then(res => {
-                    console.log("Video deleted:", res.data);
+            console.log("Video deleted:", res.data);
                     return res.data
                 })
                 .catch(err => console.log(err))
@@ -58,7 +55,7 @@ export const updateVidDetails = async (id, data) => {
     try {
         axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, data)
             .then(res => {
-                console.log("Video updated:", res.data);
+        console.log("Video updated:", res.data);
                 return res.data
             })
             .catch(err => console.log(err))
