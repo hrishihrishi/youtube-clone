@@ -25,4 +25,6 @@ router.delete('/deleteVideo/:id', videoController.deleteVideo);
 
 router.get('/getFilteredVideos', videoController.getFilteredVideos);
 
+router.get('/getVideosByChannel', videoController.getVideosByChannel);
+
 module.exports = router;

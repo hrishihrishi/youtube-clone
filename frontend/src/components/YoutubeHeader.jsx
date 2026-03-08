@@ -10,7 +10,9 @@ import ProfileDropdown from './ProfileDropdown';
 import UploadModal from './UploadModal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../index.css';
+import classes from '../components/youtubeheader.module.css';
 import { tags } from '../config/tags';
+import cx from 'classnames';
 
 // YOUTUBE HEADER (CONNECTED TO REDUX)
 export default function YoutubeHeader({ onMenuClick }) {
@@ -26,15 +28,16 @@ export default function YoutubeHeader({ onMenuClick }) {
   const handleSignOut = () => {
     dispatch(signOut());
     setIsProfileDropdownOpen(false);
+    Navigate('/');
   };
 
   return (
     <>
-      <header className="flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50">
+      <header className={classes.youtubeheader}>
 
         {/* Left: Menu */}
         <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer" onClick={onMenuClick}>
+          <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer sm:mr-1" onClick={onMenuClick}>
             <RxHamburgerMenu size={22} />
           </button>
 
@@ -46,12 +49,12 @@ export default function YoutubeHeader({ onMenuClick }) {
         </div>
 
         {/* Center: Search Bar & Mic */}
-        <div className="flex flex-grow max-w-[720px] items-center gap-4 ml-10">
+        <div className="flex flex-grow max-w-[720px] items-center gap-4 ml-2 md:ml-10 lg:ml-10 ">
           <div className="flex w-full">
 
             {/* INPUT SEARCH BAR */}
             <div className="flex w-full items-center border border-gray-300 rounded-l-full px-4 py-1 focus-within:border-blue-500 shadow-inner">
-              <AiOutlineSearch size={20} className="text-gray-400 mr-2" />
+              {/* <AiOutlineSearch size={20} className="text-gray-400 mr-2" /> */}
               <input
                 type="text"
                 placeholder="Search"
@@ -63,22 +66,28 @@ export default function YoutubeHeader({ onMenuClick }) {
             </div>
 
             {/* SEARCH ICON */}
-            <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer"
-              onClick={() => Navigate('/SearchPage?searchSentence=' + search)}
+            <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer mr-1"
+              onClick={() => {
+                if (search == "" || search == null || search == undefined) {
+                  alert("Please enter a search term");
+                  return;
+                }
+                Navigate('/SearchPage?searchSentence=' + search)
+              }}
             >
               <AiOutlineSearch size={22} />
             </button>
           </div>
 
-          {/* Mike Icon Button */}
+          {/* Mike Icon Button
           <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
             <MdMic size={24} className="text-black" />
-          </button>
+          </button> */}
         </div>
 
         {/*  CREATE BUTTON */}
         <button
-          className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
+          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
           aria-label="Create"
           onClick={() => setIsUploadModalOpen(true)}
         >
@@ -97,7 +106,7 @@ export default function YoutubeHeader({ onMenuClick }) {
           </div>
 
           {/* Button Text */}
-          <span className="text-sm font-medium text-black">
+          <span className="hidden sm:flex text-sm font-medium text-black">
             Create
           </span>
         </button>
@@ -120,7 +129,7 @@ export default function YoutubeHeader({ onMenuClick }) {
             <div className="relative">
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="hidden sm:flex w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
+                className="w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
               >
                 {currentUser?.username?.charAt(0).toUpperCase() || currentUser?.name?.charAt(0).toUpperCase() || "U"}
               </button>
@@ -158,12 +167,13 @@ export default function YoutubeHeader({ onMenuClick }) {
             onClick={() => {
               const params = new URLSearchParams(searchParams);
               if (tag === "All") {
-                Navigate('/SearchPage');
+                params.delete("category");
+                Navigate(`/SearchPage?${params.toString()}`);
               } else {
                 params.set("category", tag);
+                Navigate(`/SearchPage?${params.toString()}`);
+                // window.location.reload();
               }
-              Navigate(`/SearchPage?${params.toString()}`);
-              window.location.reload();
             }}
             className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${tag === "All"
               ? "bg-black text-white"

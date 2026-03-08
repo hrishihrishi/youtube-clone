@@ -16,10 +16,10 @@ export default function ChannelPage() {
 
   // Channel details
   const channel = {
-    name: "CodeAcademy",
-    handle: "@codeacademy_official",
-    subscribers: "1.24M",
-    videoCount: "450 videos",
+    // name: "CodeAcademy",
+    // handle: "@codeacademy_official",
+    // subscribers: "1.24M",
+    // videoCount: "450 videos",
     description: "Master the art of web development with project-based tutorials. New videos every Tuesday!",
     bannerUrl: "https://picsum.photos/seed/code/1500/300",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=CodeAcademy"
@@ -30,27 +30,6 @@ export default function ChannelPage() {
   const navigate = useNavigate();
   const [videoData, setVideoData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/videos/getAllVideos');
-        console.log('response');
-        console.log('videos', response.data);
-        setVideoData(response.data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchVideos();
-  }, []);
-
-
-
-
-
   const { isSignedIn, currentUser } = useSelector((state) => state.user);
   const [userDetails, setUserDetails] = useState(null);
 
@@ -63,7 +42,6 @@ export default function ChannelPage() {
     }
   };
 
-
   useEffect(() => {
     if (currentUser?.email) {
       fetchUserDetails();
@@ -71,6 +49,21 @@ export default function ChannelPage() {
   }, [currentUser?.email]);
 
 
+    useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/videos/getVideosByChannel', { params: { channel: currentUser?.username } });
+        console.log('response');
+        console.log('videos', response.data);
+        setVideoData(response.data);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVideos();
+  }, [currentUser?.username]);
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">

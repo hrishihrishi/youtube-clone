@@ -2,8 +2,10 @@ import { AiFillHome, AiOutlinePlaySquare, AiOutlineClockCircle } from "react-ico
 import { MdOutlineSubscriptions, MdOutlineVideoLibrary, MdOutlineHistory } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaYoutube } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
+  const Navigate = useNavigate();
   return (
     <>
       {/* 1. Dark Overlay (Backdrop) */}
@@ -28,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         {/* Sidebar Links */}
         <nav className="flex flex-col py-2 overflow-y-auto h-[calc(100vh-56px)]">
-          <SidebarItem icon={<AiFillHome size={22} />} label="Home" active />
+          <SidebarItem icon={<AiFillHome size={22} onClick={() => Navigate('/')} />} label="Home" active />
           <SidebarItem icon={<AiOutlinePlaySquare size={22} />} label="Shorts" />
           <SidebarItem icon={<MdOutlineSubscriptions size={22} />} label="Subscriptions" />
           

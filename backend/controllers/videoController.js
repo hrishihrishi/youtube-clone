@@ -29,7 +29,7 @@ exports.uploadVideoData = async (req, res) => {
         res.status(201).json(savedVideo);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ error:err.message});
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -45,7 +45,7 @@ exports.streamVideo = (req, res) => {
     });
 
     stream.on('error', (err) => {
-        res.status(404).json({error :err.message,  message: "Video not found" });
+        res.status(404).json({ error: err.message, message: "Video not found" });
     });
 
     stream.on('end', () => {
@@ -58,7 +58,7 @@ exports.getAllVideos = async (req, res) => {
         const videos = await Video.find();
         res.status(200).json(videos);
     } catch (err) {
-        console.log('error from controllers',err);
+        console.log('error from controllers', err);
         res.status(500).json({ error: err.message });
     }
 };
@@ -98,6 +98,11 @@ exports.getFilteredVideos = async (req, res) => {
         const { searchSentence, category } = req.query;
         let query = {};
 
+        if (!searchSentence && !category) {
+            const allVideos = await Video.find();
+            return res.status(200).json(allVideos);
+        }
+
         // If searchSentence exists, filter by title (case-insensitive)
         if (searchSentence) {
             query.title = { $regex: searchSentence, $options: 'i' };
@@ -109,6 +114,22 @@ exports.getFilteredVideos = async (req, res) => {
         }
 
         const videos = await Video.find(query);
+        res.status(200).json(videos);
+    } catch (err) {
+        console.log('error from controllers', err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+exports.getVideosByChannel = async (req, res) => {
+    try {
+        const { channel } = req.query;
+        
+        if (!channel) {
+            return res.status(400).json({ error: "Channel parameter is required" });
+        }
+        const videos = await Video.find({ channel: channel.toLowerCase() });
         res.status(200).json(videos);
     } catch (err) {
         console.log('error from controllers', err);
