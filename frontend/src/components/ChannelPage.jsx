@@ -5,6 +5,7 @@ import VideoCard from './VideoCard';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+// CHANNEL PAGE (CONNECTED TO DB)
 export default function ChannelPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [activeTab, setActiveTab] = useState("Videos");

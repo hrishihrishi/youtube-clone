@@ -4,6 +4,7 @@ import { FaYoutube } from "react-icons/fa";
 import { signInSuccess } from '../redux/userSlice';
 import axios from 'axios';
 
+// MODAL FOR SIGNUP AND SIGNIN (CONNECTED TO REDUX AND DB)
 export default function AuthModal({ isOpen, onClose }) {
     // used for handling signup and signin UI.
     const [isSignUp, setIsSignUp] = useState(false);

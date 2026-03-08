@@ -12,9 +12,10 @@ const videoSchema = new mongoose.Schema({
     dislikes: {type: Number, default: 0},
     views: {type: Number, default: 0},
     comments: [{
+        id: { type: Number, default: Date.now },
         username: { type: String, required: true },
         comment: { type: String, required: true },
-        dateTime: { type: Date, default: Date.now }
+        likes: { type: Number, default: 0 },
     }],
     dateTime: {type: Date, default: Date.now}
 })

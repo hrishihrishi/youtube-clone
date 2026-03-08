@@ -4,6 +4,7 @@ import VideoCard from './components/VideoCard';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// RENDERS VIDEO CARDS AND PLACES THEM IN A GRID
 export default function VideoGrid({ isSidebarOpen }) {
   const navigate = useNavigate();
   const [allVideos, setAllVideos] = useState([]);
@@ -25,12 +26,7 @@ export default function VideoGrid({ isSidebarOpen }) {
   }, []);
 
   return (
-    <div className={`
-      grid gap-4 p-4 transition-all duration-300
-      grid-cols-1 
-      sm:grid-cols-2 
-      lg:grid-cols-3
-    `}>
+    <div className={`grid gap-4 p-4 transition-all duration-300 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`}>
       {allVideos.map((video) => (
         <div key={video._id} onClick={() => navigate(`/VideoPlaying?id=${video._id}`)} className="cursor-pointer">
           <VideoCard video={video} />

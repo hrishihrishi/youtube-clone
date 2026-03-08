@@ -2,6 +2,8 @@ import React from 'react';
 import SearchPageVideoCard from './components/SearchPageVideoCard';
 import { videoData } from './data/videos';
 
+
+// RENDERS VIDEO CARDS BASED ON SEARCH SENTENCE
 export default function SearchPage({ isSidebarOpen=false, searchSentence='' }) {
   
   // 1. Search Algorithm
@@ -17,7 +19,6 @@ export default function SearchPage({ isSidebarOpen=false, searchSentence='' }) {
       return searchKeys.some((key) => title.includes(key));
     });
   };
-
   const filteredVideos = filterVideos();
 
   return (

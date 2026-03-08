@@ -1,5 +1,6 @@
 import React from 'react';
 
+// RETURN A VIDEO CARD BASED ON VIDEO PARAMETER
 export default function SearchPageVideoCard({ video }) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 cursor-pointer group mb-4">

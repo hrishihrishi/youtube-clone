@@ -1,6 +1,7 @@
 import { MdOutlineAccountBox, MdOutlineLogin, MdOutlineSettings, MdHelpOutline } from "react-icons/md";
 import { SiGooglecloud } from "react-icons/si";
 
+// MODAL FOR PROFILE AND SETTINGS OPTIONS
 export default function ProfileDropdown({ user, onSignOut }) {
   return (
     <div className="absolute top-12 right-0 w-72 bg-white shadow-xl rounded-xl border border-gray-200 py-2 z-[100] text-black">

@@ -10,6 +10,7 @@ import ProfileDropdown from './ProfileDropdown';
 import UploadModal from './UploadModal';
 import { useNavigate } from 'react-router-dom';
 
+// YOUTUBE HEADER (CONNECTED TO REDUX)
 export default function YoutubeHeader({ onMenuClick }) {
   const [search, setSearch] = useState("");
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);

@@ -7,6 +7,8 @@ import axios from 'axios';
 import VideoCard from './VideoCard';
 import { useSearchParams } from 'react-router-dom';
 
+
+// PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.
 export default function VideoPlayingPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id'); // Get ID from query string (?id=...)
@@ -19,11 +21,10 @@ export default function VideoPlayingPage() {
         // if (!id) return;
         axios.get(`http://localhost:5000/api/videos/getVideoDetails/${id}`)
             .then(res => {
-                console.log(res.data);
                 setVideoDetails(res.data);
-                console.log(videoDetails);
+                setLikes(res.data.likes);
+                setComments(res.data.comments || []);
                 setLoading(false);
-                setLikes(videoDetails.likes);
             })
             .catch(err => {
                 console.log("Error fetching video details (in VideoPlayingPage.js):", err);
@@ -40,23 +41,61 @@ export default function VideoPlayingPage() {
 
 
     const handleLike = () => {
-        setLiked(!liked);
+        // 1. If the button is already liked, redirect to handleUnlike and return
+        if (liked) {
+            handleUnlike();
+            return;
+        }
+        // 2. If not liked initially, continue
+        setLiked(true);
 
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: videoDetails.likes + 1 })
-            .then(res => {
-                console.log(res.data);
-                setVideoDetails(res.data);
-                setLikes(videoDetails.likes);
-            })
-            .catch(err => {
-                console.log("Error updating video details (in VideoPlayingPage.js):", err);
-            })
-
+        // Clear dislike if it was active
         if (disliked) setDisliked(false);
+
+        const newLikesCount = likes + 1;
+        setLikes(newLikesCount);
+        // Sync with backend
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: newLikesCount })
+            .then(res => {
+                setVideoDetails(res.data);
+                // setLikes(res.data.likes);
+            })
+            .catch(err => console.log("Error during like:", err));
     };
+
+    // Helper function to handle the "Unlike" logic
+    const handleUnlike = () => {
+        setLiked(false);
+        const newLikesCount = likes - 1;
+        setLikes(newLikesCount);
+        // Sync with backend
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: newLikesCount })
+            .then(res => {
+                setVideoDetails(res.data);
+                // setLikes(res.data.likes);
+            })
+            .catch(err => console.log("Error during unlike:", err));
+    };
+
+    // const handleLike = () => {
+    //     setLiked(!liked);
+
+    //     axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: videoDetails.likes + 1 })
+    //         .then(res => {
+    //             console.log(res.data);
+    //             setVideoDetails(res.data);
+    //             setLikes(videoDetails.likes);
+    //         })
+    //         .catch(err => {
+    //             console.log("Error updating video details (in VideoPlayingPage.js):", err);
+    //         })
+
+    //     if (disliked) setDisliked(false);
+    // };
 
     const handleDislike = () => {
         setDisliked(!disliked);
+        handleUnlike();
         axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { dislikes: videoDetails.dislikes + 1 })
             .then(res => {
                 console.log(res.data);
@@ -73,12 +112,22 @@ export default function VideoPlayingPage() {
         if (!newComment.trim()) return;
         const comment = {
             id: Date.now(),
-            user: "Guest User",
-            text: newComment,
+            username: "Guest User",
+            comment: newComment,
             likes: 0
         };
         setComments([comment, ...comments]);
         setNewComment("");
+
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { comments: [...comments, comment] })
+            .then(res => {
+                console.log(res.data);
+                setVideoDetails(res.data);
+                setComments(res.data.comments || []);
+            })
+            .catch(err => {
+                console.log("Error updating video details (in VideoPlayingPage.js):", err);
+            })
     };
 
     return (
@@ -89,12 +138,10 @@ export default function VideoPlayingPage() {
         ) : (
             <div className="flex flex-col lg:flex-row gap-6 p-4 lg:px-10 bg-white">
 
-                {/* POPULATING DATA */}
-
                 {/* LEFT SIDE: PLAYER & INFO */}
                 <div className="flex-grow lg:max-w-[calc(100%-400px)]">
 
-                    {/* Video Player */}
+                    {/* VIDEO PLAYER */}
                     <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow-lg">
                         {loading ? (
                             <div className="flex items-center justify-center h-full">
@@ -105,10 +152,10 @@ export default function VideoPlayingPage() {
                         )}
                     </div>
 
-                    {/* Video Title */}
+                    {/* TITLE */}
                     <h1 className="text-xl font-bold mt-4 line-clamp-2">{videoDetails.title}</h1>
 
-                    {/* Actions Bar (Channel + Buttons) */}
+                    {/* ACTIONS BAR (CHANNEL + BUTTONS) */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-3">
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-yellow-400 to-red-500" />
@@ -141,7 +188,7 @@ export default function VideoPlayingPage() {
                         </div>
                     </div>
 
-                    {/* Description Box */}
+                    {/* DESCRIPTION BOX */}
                     <div className="bg-gray-100 rounded-xl p-3 mt-4 text-sm hover:bg-gray-200 cursor-pointer transition">
                         <p className="font-bold">152K views • 2 days ago</p>
                         <p className="mt-1">{videoDetails.description} <span className="font-bold">more</span></p>
@@ -173,8 +220,8 @@ export default function VideoPlayingPage() {
                                 <div key={c.id} className="flex gap-3 text-sm">
                                     <div className="h-10 w-10 rounded-full bg-gray-300 shrink-0" />
                                     <div>
-                                        <p className="font-bold">@{c.user.toLowerCase()} <span className="font-normal text-gray-500 ml-2">1 second ago</span></p>
-                                        <p className="mt-1">{c.text}</p>
+                                        <p className="font-bold">@{c.username?.toLowerCase() || 'guest'} <span className="font-normal text-gray-500 ml-2">1 second ago</span></p>
+                                        <p className="mt-1">{c.comment}</p>
                                         <div className="flex items-center gap-4 mt-2">
                                             <AiOutlineLike className="cursor-pointer" /> {c.likes}
                                             <AiOutlineDislike className="cursor-pointer" />
