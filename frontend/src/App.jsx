@@ -5,8 +5,13 @@ import VideoGrid from './VideoGrid';
 import { Outlet } from 'react-router-dom';
 
 export default function App() {
+  // Boolean state to control whether the sidebar (drawer) is visible
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  /**
+   * Placeholder data for initial UI prototyping. 
+   * (Note: Real video data is now fetched from the backend in VideoGrid and SearchPage)
+   */
   const videoData = [
     {
       videoId: "video01",

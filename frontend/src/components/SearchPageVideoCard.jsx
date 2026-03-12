@@ -1,10 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// RETURN A VIDEO CARD BASED ON VIDEO PARAMETER
+/**
+ * SearchPageVideoCard Component: Specialized card layout for search results.
+ * Features a horizontal layout on larger screens to mimic the vanilla YouTube search UI.
+ */
 export default function SearchPageVideoCard({ video }) {
   const navigate = useNavigate();
 
+  // Redirects to the playback page when any part of the card is clicked
   const handleCardClick = () => {
     navigate(`/VideoPlaying?id=${video._id}`);
   };
@@ -12,13 +16,18 @@ export default function SearchPageVideoCard({ video }) {
   return (
     <div onClick={handleCardClick} className="flex flex-col sm:flex-row gap-4 cursor-pointer group mb-4">
 
-      {/* Thumbnail: Large on desktop, full-width on mobile */}
+      {/* 
+          1. Large Thumbnail: 
+          Fixed width on desktop (360px), responsive aspect-ratio on mobile.
+          Uses the backend stream endpoint for the source image.
+      */}
       <div className="relative shrink-0 w-full sm:w-[360px] aspect-video rounded-xl overflow-hidden bg-gray-100">
         <img
           src={`http://localhost:5000/api/videos/stream/${video.thumbnail}`}
           alt={video.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
+        {/* Placeholder for video duration */}
         <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-0.5 rounded font-medium">
           10:05
         </div>
@@ -36,7 +45,7 @@ export default function SearchPageVideoCard({ video }) {
           <span>{new Date(video.dateTime).toLocaleDateString()}</span>
         </div>
 
-        {/* Channel Info */}
+        {/* Creator Identity: Avatar and channel name together */}
         <div className="flex items-center gap-2 py-3">
           <div className="h-6 w-6 rounded-full bg-gray-200 overflow-hidden">
             <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`} alt="avatar" />

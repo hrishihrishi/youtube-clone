@@ -5,9 +5,15 @@ import axios from 'axios';
 import '../index.css';
 import { tags } from '../config/tags';
 
+/**
+ * UploadModal Component: Provides a UI for users to upload new videos.
+ * Handles text metadata and multi-file uploads (video + thumbnail).
+ */
 export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen }) {
+  // Access current user info to associate the upload with a specific channel
   const currentUser = useSelector((state) => state.user.currentUser);
 
+  // Local state for all form fields including raw file objects
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -16,18 +22,29 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
     thumbnail: null,
   });
 
+  // Early return if modal is toggled off
   if (!isUploadModalOpen) return null;
 
+  /**
+   * Updates text-based state values.
+   */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Specifically handles file input changes to store the raw File object.
+   */
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormData((prev) => ({ ...prev, [name]: files[0] }));
   };
 
+  /**
+   * Orchestrates the upload process to the backend.
+   * Uses FormData to support multi-part/form-data requests (required for files).
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,19 +55,23 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
       return;
     }
 
-    // Use FormData for file uploads
+    /* 
+       Prepare Multi-part Data:
+       We append all fields to a FormData object which Axios sends with correct headers.
+    */
     const data = new FormData();
     data.append("title", formData.title);
     data.append("description", formData.description);
     data.append("category", formData.category);
     data.append("video", formData.videoFile); // Field name for the backend
     data.append("thumbnail", formData.thumbnail);
-    data.append("channel", currentUser?.username || "Anonymous"); // Match model "channel" field
+    data.append("channel", currentUser?.user?.username || "Anonymous"); // Match model "channel" field
 
     try {
       const response = await axios.post("http://localhost:5000/api/videos/upload", data, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${currentUser?.token}`
         },
       });
       alert("Video uploaded successfully");

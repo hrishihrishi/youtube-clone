@@ -1,30 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike, AiOutlineShareAlt, AiOutlineDelete } from "react-icons/ai";
 import { MdPlaylistAdd } from "react-icons/md";
 import { TfiMoreAlt } from "react-icons/tfi";
-// import { videoData } from './../data/videos.jsx';
-import { useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from './VideoCard';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import '../index.css';
 import { deleteVideo, fetchAllVideos, updateVidDetails } from '../service/videoservice.js';
+import { MdEdit } from "react-icons/md";
+import EditVideoModal from './EditVideoModal.jsx';
 
 
 // PLAYS THE VIDEO BASED ON URL PARAMS (ID) AND UPDATES LIKES, COMMENTS, SUBSCRIPTIONS ETC.
 export default function VideoPlayingPage() {
     const [videoData, setVideoData] = useState([]);
+
+    // React Router hooks for URL manipulation and navigation
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const id = searchParams.get('id'); // Get ID from query string (?id=...)
 
+    // Access global state for authentication token
+    const { currentUser } = useSelector((state) => state.user);
+
+    // States for the current video's metadata and interaction status
     const [videoDetails, setVideoDetails] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isMoreOpen, setIsMoreOpen] = useState(false);
+    const [isMoreOpen, setIsMoreOpen] = useState(false); // Controls the '...' more options dropdown
+    const [liked, setLiked] = useState(false);
+    const [disliked, setDisliked] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
+    const [likes, setLikes] = useState(0);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-
+    // Fetch the primary video details whenever the 'id' in the URL changes
     useEffect(() => {
-        // if (!id) return;
+        setLoading(true);
         axios.get(`http://localhost:5000/api/videos/getVideoDetails/${id}`)
             .then(res => {
                 setVideoDetails(res.data);
@@ -38,29 +52,23 @@ export default function VideoPlayingPage() {
         // Set loading logic already handled by second effect or separate state if needed
     }, [id]);
 
+    // Fetch the full list of videos for the sidebar recommendations on initial mount
     useEffect(() => {
         fetchAllVideos().then(res => {
             setVideoData(res);
         })
     }, []);
 
-
-    const [liked, setLiked] = useState(false);
-    const [disliked, setDisliked] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
-    const [comments, setComments] = useState([
-    ]);
-    const [newComment, setNewComment] = useState("");
-    const [likes, setLikes] = useState(0);
-
-
+    /**
+     * Logic for 'Like' button:
+     * Toggles like state and increments/decrements the counter.
+     * Persists the new count to the backend.
+     */
     const handleLike = () => {
-        // 1. If the button is already liked, redirect to handleUnlike and return
         if (liked) {
             handleUnlike();
             return;
         }
-        // 2. If not liked initially, continue
         setLiked(true);
 
         // Clear dislike if it was active
@@ -69,7 +77,10 @@ export default function VideoPlayingPage() {
         const newLikesCount = likes + 1;
         setLikes(newLikesCount);
         // Sync with backend
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: newLikesCount })
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`,
+            { likes: newLikesCount },
+            { headers: { Authorization: `Bearer ${currentUser?.token}` } }
+        )
             .then(res => {
                 setVideoDetails(res.data);
                 // setLikes(res.data.likes);
@@ -83,7 +94,10 @@ export default function VideoPlayingPage() {
         const newLikesCount = likes - 1;
         setLikes(newLikesCount);
         // Sync with backend
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { likes: newLikesCount })
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`,
+            { likes: newLikesCount },
+            { headers: { Authorization: `Bearer ${currentUser?.token}` } }
+        )
             .then(res => {
                 setVideoDetails(res.data);
                 // setLikes(res.data.likes);
@@ -91,20 +105,26 @@ export default function VideoPlayingPage() {
             .catch(err => console.log("Error during unlike:", err));
     };
 
+    /**
+     * Logic for 'Dislike' button.
+     * Increases dislike count on the backend.
+     */
     const handleDislike = () => {
         setDisliked(!disliked);
-        handleUnlike();
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { dislikes: videoDetails.dislikes + 1 })
-            .then(res => {
-                console.log(res.data);
-                setVideoDetails(res.data);
-            })
-            .catch(err => {
-                console.log("Error updating video details (in VideoPlayingPage.js):", err);
-            })
-        // if (liked) setLiked(false);
+        if (liked) handleUnlike();
+
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`,
+            { dislikes: (videoDetails?.dislikes || 0) + 1 },
+            { headers: { Authorization: `Bearer ${currentUser?.token}` } }
+        )
+            .then(res => setVideoDetails(res.data))
+            .catch(err => console.error("Error updating dislike:", err));
     };
 
+    /**
+     * Logic for posting a new comment.
+     * Appends to local state immediately for responsiveness, then syncs with database.
+     */
     const addComment = (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
@@ -117,7 +137,10 @@ export default function VideoPlayingPage() {
         setComments([comment, ...comments]);
         setNewComment("");
 
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, { comments: [...comments, comment] })
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`,
+            { comments: [...comments, comment] },
+            { headers: { Authorization: `Bearer ${currentUser?.token}` } }
+        )
             .then(res => {
                 console.log(res.data);
                 setVideoDetails(res.data);
@@ -152,6 +175,11 @@ export default function VideoPlayingPage() {
         }
     };
 
+    // Updates the video details in the UI without a page refresh (I DON'T UNDERSTAND THIS)
+    const handleUpdateSuccess = (updatedVideo) => {
+        setVideoDetails(updatedVideo);
+    };
+
     return (
         loading ? (
             <div className="flex items-center justify-center h-full">
@@ -160,10 +188,10 @@ export default function VideoPlayingPage() {
         ) : (
             <div className="flex flex-col lg:flex-row gap-6 p-4 lg:px-10 bg-white">
 
-                {/* LEFT SIDE: PLAYER & INFO */}
+                {/* LEFT SIDE: PRIMARY CONTENT (Player, Info, Comments) */}
                 <div className="flex-grow lg:max-w-[calc(100%-400px)]">
 
-                    {/* VIDEO PLAYER */}
+                    {/* Video Player: Streams content from our backend API filename */}
                     <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow-lg">
                         {loading ? (
                             <div className="flex items-center justify-center h-full">
@@ -174,12 +202,12 @@ export default function VideoPlayingPage() {
                         )}
                     </div>
 
-                    {/* TITLE */}
-                    <h1 className="text-xl font-bold mt-4 line-clamp-2">{videoDetails.title}</h1>
+                    <h1 className="text-xl font-bold mt-4 line-clamp-2">{videoDetails?.title}</h1>
 
                     {/* ACTIONS BAR (CHANNEL + BUTTONS) */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-3">
                         <div className="flex items-center gap-3">
+                            {/* Fake Avatar */}
                             <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-yellow-400 to-red-500" />
                             <div>
                                 <p className="font-bold text-base">{videoDetails.channel}</p>
@@ -190,6 +218,7 @@ export default function VideoPlayingPage() {
                             </button>
                         </div>
 
+                        {/* Action Buttons: Like, Dislike, Share, More */}
                         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
                             <div className="flex items-center bg-gray-100 rounded-full">
                                 {/* LIKE BUTTON */}
@@ -201,7 +230,6 @@ export default function VideoPlayingPage() {
                                     {disliked ? <AiFillDislike size={20} /> : <AiOutlineDislike size={20} />}
                                 </button>
                             </div>
-                            {/* SHARE BUTTON */}
                             <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium">
                                 <AiOutlineShareAlt size={20} /> Share
                             </button>
@@ -231,19 +259,36 @@ export default function VideoPlayingPage() {
                                         >
                                             <AiOutlineDelete size={20} /> Delete video
                                         </button>
+                                        <button
+                                            onClick={() => setIsEditModalOpen(true)}
+                                            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100  w-full text-sm font-medium transition"
+                                        >
+                                            <MdEdit size={20} />
+                                            <span>Edit Video</span>
+                                        </button>
                                     </div>
                                 )}
                             </div>
+                            {
+                                isEditModalOpen && (
+                                    <EditVideoModal
+                                        video={videoDetails}
+                                        isOpen={isEditModalOpen}
+                                        onClose={() => setIsEditModalOpen(false)}
+                                        onUpdateSuccess={handleUpdateSuccess}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
 
-                    {/* DESCRIPTION BOX */}
+                    {/* Description and Views */}
                     <div className="bg-gray-100 rounded-xl p-3 mt-4 text-sm hover:bg-gray-200 cursor-pointer transition">
                         <p className="font-bold">152K views • 2 days ago</p>
                         <p className="mt-1">{videoDetails.description} <span className="font-bold">more</span></p>
                     </div>
 
-                    {/* COMMENTS SECTION */}
+                    {/* Comments Area */}
                     <div className="mt-6">
                         <h3 className="text-xl font-bold mb-4">{comments.length} Comments</h3>
                         <form onSubmit={addComment} className="flex gap-3 mb-8">
@@ -289,13 +334,8 @@ export default function VideoPlayingPage() {
                 {/* RIGHT SIDE: RECOMMENDED VIDEOS */}
                 <div className="lg:w-[400px] flex flex-col gap-4">
                     <h4 className="font-bold">Related Videos</h4>
-
-                    {videoData?.map((v, index) => (
-                        <div
-                            key={v._id || index}
-                            className="flex gap-2 cursor-pointer group"
-                            onClick={() => navigate(`/VideoPlaying?id=${v._id}`)}
-                        >
+                    {videoData?.map((v) => (
+                        <div key={v._id} className="flex gap-2 cursor-pointer group" onClick={() => navigate(`/VideoPlaying?id=${v._id}`)}>
                             <div className="w-40 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100">
                                 <img
                                     src={`http://localhost:5000/api/videos/stream/${v.thumbnail}`}
@@ -303,16 +343,13 @@ export default function VideoPlayingPage() {
                                     alt="thumbnail"
                                 />
                             </div>
-                            <div className="flex flex-col pr-2">
-                                <h5 className="text-sm font-bold line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-                                    {v.title}
-                                </h5>
+                            <div className="flex flex-col pr-2 overflow-hidden">
+                                <h5 className="text-sm font-bold line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">{v.title}</h5>
                                 <p className="text-xs text-gray-600 mt-1 uppercase">{v.channel}</p>
                                 <p className="text-xs text-gray-600">{v.views} views • {new Date(v.dateTime).toLocaleDateString()}</p>
                             </div>
                         </div>
                     ))}
-
                 </div>
             </div>
         )

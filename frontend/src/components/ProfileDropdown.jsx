@@ -12,8 +12,8 @@ export default function ProfileDropdown({ user, onSignOut }) {
           {user?.username?.charAt(0) || user?.name?.charAt(0) || "U"}
         </div>
         <div className="flex flex-col overflow-hidden">
-          <p className="font-medium text-base truncate">{user?.username || user?.name}</p>
-          <p className="text-sm text-gray-600 truncate">@{user?.username?.toLowerCase() || user?.handle}</p>
+          <p className="font-medium text-base truncate">{user?.user?.username || user?.user?.name}</p>
+          <p className="text-sm text-gray-600 truncate">@{user?.user?.username?.toLowerCase() || user?.user?.handle}</p>
           <a href="/ChannelPage" className="text-blue-600 text-sm mt-2 hover:underline">View your channel</a>
         </div>
       </div>

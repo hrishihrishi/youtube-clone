@@ -1,25 +1,26 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
-    videoId: {type: Date, default: Date.now, unique: true},
-    title: {type: String, required: true},
-    category: {type: String, required: true},
-    description: {type: String, required: true},
-    thumbnail: {type: String, required: true},
-    video: {type: String, required: true},
-    channel: {type: String, required: true, lowercase: true},
-    likes: {type: Number, default: 0},
-    dislikes: {type: Number, default: 0},
-    views: {type: Number, default: 0},
+    videoId: { type: Date, default: Date.now, unique: true },
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    description: { type: String, required: true },
+    thumbnail: { type: String, required: true },
+    video: { type: String, required: true },
+    channel: { type: String, required: true, lowercase: true },
+    likes: { type: Number, default: 0 },
+    dislikes: { type: Number, default: 0 },
+    views: { type: Number, default: 0 },
     comments: [{
         id: { type: Number, default: Date.now },
         username: { type: String, required: true },
         comment: { type: String, required: true },
         likes: { type: Number, default: 0 },
     }],
-    dateTime: {type: Date, default: Date.now}
+    dateTime: { type: Date, default: Date.now }
 })
 
+// Create and export the Video model
 const Video = mongoose.model('Video', videoSchema);
 
-module.exports = Video;
+export default Video;

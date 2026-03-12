@@ -10,21 +10,30 @@ import ProfileDropdown from './ProfileDropdown';
 import UploadModal from './UploadModal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../index.css';
-import classes from '../components/youtubeheader.module.css';
+import classes from '../components/youtubeheader.module.css'; // Scoped CSS modules
 import { tags } from '../config/tags';
 import cx from 'classnames';
 
-// YOUTUBE HEADER (CONNECTED TO REDUX)
+/**
+ * YoutubeHeader Component: The top navigation bar.
+ * Contains search bar, user authentication controls, upload trigger, and category tags.
+ */
 export default function YoutubeHeader({ onMenuClick }) {
+  // Local state for the search input value
   const [search, setSearch] = useState("");
+  // States to control various modals and dropdowns
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
   const Navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  // Retrieve authentication status and user data from Redux global state
   const { isSignedIn, currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  // Helper to handle user logout via Redux and redirection
   const handleSignOut = () => {
     dispatch(signOut());
     setIsProfileDropdownOpen(false);
@@ -35,26 +44,24 @@ export default function YoutubeHeader({ onMenuClick }) {
     <>
       <header className={classes.youtubeheader}>
 
-        {/* Left: Menu */}
+        {/* Left Section: Hamburger Menu and YouTube Logo */}
         <div className="flex items-center gap-4">
           <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer sm:mr-1" onClick={onMenuClick}>
             <RxHamburgerMenu size={22} />
           </button>
 
-          {/* YOUTUBE LOGO AND ICON */}
           <div className="hidden sm:flex items-center gap-1 cursor-pointer" onClick={() => Navigate('/')}>
             <FaYoutube size={30} className="text-red-600" />
             <span className="font-bold text-xl tracking-tighter">YouTube</span>
           </div>
         </div>
 
-        {/* Center: Search Bar & Mic */}
+        {/* Center Section: Search Bar and (Hidden) Mic Icon */}
         <div className="flex flex-grow max-w-[720px] items-center gap-4 ml-2 md:ml-10 lg:ml-10 ">
           <div className="flex w-full">
 
-            {/* INPUT SEARCH BAR */}
+            {/* Main search input field with 'Enter' key support */}
             <div className="flex w-full items-center border border-gray-300 rounded-l-full px-4 py-1 focus-within:border-blue-500 shadow-inner">
-              {/* <AiOutlineSearch size={20} className="text-gray-400 mr-2" /> */}
               <input
                 type="text"
                 placeholder="Search"
@@ -65,7 +72,7 @@ export default function YoutubeHeader({ onMenuClick }) {
               />
             </div>
 
-            {/* SEARCH ICON */}
+            {/* Explicit Search button */}
             <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer mr-1"
               onClick={() => {
                 if (search == "" || search == null || search == undefined) {
@@ -78,20 +85,14 @@ export default function YoutubeHeader({ onMenuClick }) {
               <AiOutlineSearch size={22} />
             </button>
           </div>
-
-          {/* Mike Icon Button
-          <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
-            <MdMic size={24} className="text-black" />
-          </button> */}
         </div>
 
-        {/*  CREATE BUTTON */}
+        {/* Right Section: Create Button, Notifications, and User Profile/Sign-in */}
         <button
           className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
           aria-label="Create"
           onClick={() => setIsUploadModalOpen(true)}
         >
-          {/* Plus Icon Wrapper */}
           <div className="w-6 h-6 flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -104,34 +105,25 @@ export default function YoutubeHeader({ onMenuClick }) {
               <path d="M12 3a1 1 0 00-1 1v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2h-7V4a1 1 0 00-1-1Z"></path>
             </svg>
           </div>
-
-          {/* Button Text */}
-          <span className="hidden sm:flex text-sm font-medium text-black">
-            Create
-          </span>
+          <span className="hidden sm:flex text-sm font-medium text-black">Create</span>
         </button>
 
-        {
-          isUploadModalOpen && <UploadModal isUploadModalOpen={isUploadModalOpen} setIsUploadModalOpen={setIsUploadModalOpen} />
-        }
+        {/* Conditional rendering for the Video Upload Modal */}
+        {isUploadModalOpen && <UploadModal isUploadModalOpen={isUploadModalOpen} setIsUploadModalOpen={setIsUploadModalOpen} />}
 
-
-
-
-
-        {/* Right: Actions & Profile */}
         <div className="relative flex items-center gap-2 md:gap-4">
           <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer hidden sm:block">
             <AiOutlineBell size={24} title="Notifications" />
           </button>
 
+          {/* User Profile logic: Show avatar and dropdown if signed in, otherwise show Sign In button */}
           {isSignedIn ? (
             <div className="relative">
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 className="w-8 h-8 rounded-full bg-purple-600 items-center justify-center text-white font-semibold cursor-pointer hover:bg-purple-700 transition"
               >
-                {currentUser?.username?.charAt(0).toUpperCase() || currentUser?.name?.charAt(0).toUpperCase() || "U"}
+                {currentUser?.user?.username?.charAt(0).toUpperCase() || currentUser?.user?.name?.charAt(0).toUpperCase() || "U"}
               </button>
 
               {isProfileDropdownOpen && (
@@ -152,6 +144,7 @@ export default function YoutubeHeader({ onMenuClick }) {
           )}
         </div>
 
+        {/* Authentication Modal for Sign In and Sign Up */}
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
@@ -159,18 +152,18 @@ export default function YoutubeHeader({ onMenuClick }) {
 
       </header>
 
-      {/* TAGS */}
+      {/* Category Tags Section: Horizontally scrollable list of video categories */}
       <div className="flex items-center gap-3 px-4 py-3 overflow-x-auto border-b border-gray-100 bg-white scrollbar-hide justify-around">
-        {["All", ...tags].map((tag) => (
+        {tags.map((tag) => (
           <button
             key={tag}
             onClick={() => {
               const params = new URLSearchParams(searchParams);
               if (tag === "All") {
-                params.delete("category");
+                params.delete("category"); // Removing category filter for "All"
                 Navigate(`/SearchPage?${params.toString()}`);
               } else {
-                params.set("category", tag);
+                params.set("category", tag); // Apply specific category filter
                 Navigate(`/SearchPage?${params.toString()}`);
                 // window.location.reload();
               }

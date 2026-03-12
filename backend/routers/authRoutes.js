@@ -1,10 +1,14 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { signUp, signInUsingEmailAndPassword, signOut, getUserDetails } = require('../controllers/authController');
+import { signUp, signInUsingEmailAndPassword, signOut, getUserDetails } from '../controllers/authController.js';
+import { protect } from '../middlewares/authmiddleware.js';
 
+// Auth Routes
 router.post('/signup', signUp);
 router.post('/signin', signInUsingEmailAndPassword);
-router.post('/signout', signOut);
-router.post('/getUserDetails', getUserDetails);
 
-module.exports = router;
+// Protected Auth Routes
+router.post('/signout', protect, signOut);
+router.post('/getUserDetails', protect, getUserDetails);
+
+export default router;

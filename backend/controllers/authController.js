@@ -1,10 +1,15 @@
-const User = require('../models/user');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../models/user.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-exports.signUp = async (req, res) => {
+/**
+ * Handles new user registration (Sign Up).
+ * Validates existence, creates a user, and returns a session token.
+ */
+export const signUp = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        // Basic validation for required fields
         if (!username || !email || !password) {
             return res.status(400).json({ error: 'All fields are required' });
         }
@@ -21,10 +26,11 @@ exports.signUp = async (req, res) => {
             channel: username
         });
 
+        // Generate a JWT for immediate login after signup
         const token = jwt.sign({ id: email }, process.env.JWT_SECRET, { expiresIn: '1d' });
         user.token = token;
 
-        // RETURN USER (WITH JWT TOKEN).
+        // Return successfully created user along with the access token
         res.status(201).json({ user, token });
 
     } catch (error) {
@@ -33,30 +39,32 @@ exports.signUp = async (req, res) => {
     }
 }
 
-
-
-exports.signInUsingEmailAndPassword = async (req, res) => {
+/**
+ * Handles user authentication (Sign In).
+ * Compares passwords and returns a JWT if valid.
+ */
+export const signInUsingEmailAndPassword = async (req, res) => {
     try {
         console.log(req.body);
         const { email, password } = req.body;
 
-        // CHECK IF USER EXISTS.
+        // Find the user by their email address
         const user = await User.findOne({ email });
 
-        // ASK USER TO SIGNUP INSTEAD.
+        // If no user is found, suggest signing up
         if (!user) {
             console.log("User not found");
-            alert("User not found try to signup");
             return res.status(404).json({ error: 'User not found try to signup' });
         }
 
-        // VERIFY PASSWORD.
+        // Compare the provided plain-text password with the stored hashed password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             console.log("Invalid password");
             return res.status(401).json({ message: 'Invalid password' });
         }
 
+        // Generate a fresh session JWT token
         const token = jwt.sign({ id: email }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.status(200).json({ user, token });
     } catch (error) {
@@ -65,9 +73,11 @@ exports.signInUsingEmailAndPassword = async (req, res) => {
     }
 }
 
-
-
-exports.signOut = async (req, res) => {
+/**
+ * Handles user log out.
+ * Resets the session status in the database.
+ */
+export const signOut = async (req, res) => {
     try {
         const { email } = req.body;
         // SET USER IS SIGNED IN TO FALSE.
@@ -87,10 +97,13 @@ exports.signOut = async (req, res) => {
     }
 }
 
-
-exports.getUserDetails = async (req, res) => {
+/**
+ * Fetches data for a specific user based on their email.
+ */
+export const getUserDetails = async (req, res) => {
     try {
         const { email } = req.body;
+        // Query the database for user profile and settings
         const user = await User.findOne({ email });
         if (!user) {
             console.log("User not found while fetching getUserDetails");

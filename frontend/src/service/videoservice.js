@@ -40,7 +40,7 @@ export const deleteVideo = async (id) => {
         try {
             axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`)
                 .then(res => {
-            console.log("Video deleted:", res.data);
+                    console.log("Video deleted:", res.data);
                     return res.data
                 })
                 .catch(err => console.log(err))
@@ -55,7 +55,7 @@ export const updateVidDetails = async (id, data) => {
     try {
         axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, data)
             .then(res => {
-        console.log("Video updated:", res.data);
+                console.log("Video updated:", res.data);
                 return res.data
             })
             .catch(err => console.log(err))

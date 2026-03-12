@@ -1,30 +1,32 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { upload } = require('../config/gridFsConfig');
-const videoController = require('../controllers/videoController');
+import { upload } from '../config/gridFsConfig.js';
+import { uploadVideoData, streamVideo, getAllVideos, getVideoDetails, updateVideoDetails, deleteVideo, getFilteredVideos, getVideosByChannel } from '../controllers/videoController.js';
+import { protect } from '../middlewares/authmiddleware.js';
 
-// .fields allows us to upload multiple types of files at once
-router.post('/upload', upload.fields([
+// ROUTE: Uploading video and thumbnail
+// Protected: Only logged-in users can upload
+router.post('/upload', protect, upload.fields([
   { name: 'video', maxCount: 1 },
   { name: 'thumbnail', maxCount: 1 }
-]), videoController.uploadVideoData);
+]), uploadVideoData);
 
-
-
-// Route for the frontend <video src="..."> tag
-router.get('/stream/:filename', videoController.streamVideo);
+// ROUTE: Video Streaming
+router.get('/stream/:filename', streamVideo);
 
 // Get all videos
-router.get('/getAllVideos', videoController.getAllVideos);
+router.get('/getAllVideos', getAllVideos);
 
-router.get('/getVideoDetails/:id', videoController.getVideoDetails);
+router.get('/getVideoDetails/:id', getVideoDetails);
 
-router.post('/updateVideoDetails/:id', videoController.updateVideoDetails);
+// Protected: Only logged-in users can update likes/details
+router.post('/updateVideoDetails/:id', protect, updateVideoDetails);
 
-router.delete('/deleteVideo/:id', videoController.deleteVideo);
+// Protected: Only logged-in users can delete videos
+router.delete('/deleteVideo/:id', protect, deleteVideo);
 
-router.get('/getFilteredVideos', videoController.getFilteredVideos);
+router.get('/getFilteredVideos', getFilteredVideos);
 
-router.get('/getVideosByChannel', videoController.getVideosByChannel);
+router.get('/getVideosByChannel', getVideosByChannel);
 
-module.exports = router;
+export default router;

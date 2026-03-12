@@ -1,2 +1,2 @@
 
-export const tags = ["Education", "Gaming", "Music", "Tech", "Entertainment"];
+export const tags = ["Education", "Gaming", "Music", "Tech", "Sports", "News", "Entertainment"];

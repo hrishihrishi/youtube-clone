@@ -1,5 +1,10 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'; // Bcrypt for secure password hashing
+
+/**
+ * User Schema definition for storing user credentials and profile data.
+ * Includes fields for authentication, channel details, and activity tracking.
+ */
 const userSchema = new mongoose.Schema({
 
     channel: { type: String, required: true, unique: true, lowercase: true },
@@ -16,13 +21,19 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-// MONGOOSE MIDDLEWARE TO HASH PASSWORD BEFORE (PRE) SAVING
+/**
+ * Mongoose Middleware: Runs before a user document is saved to the database.
+ * If the password has been modified, it salts and hashes the password for security.
+ */
 userSchema.pre('save', async function () {
     try {
+        // Skip hashing if password field is not changed (e.g., updating username)
         if (!this.isModified('password')) {
             return;
         }
+        // Generate a random salt with 10 rounds of processing
         const salt = await bcrypt.genSalt(10);
+        // Hash the password combined with the salt
         this.password = await bcrypt.hash(this.password, salt);
     } catch (error) {
         console.log('Error while hashing password', error);
@@ -31,4 +42,4 @@ userSchema.pre('save', async function () {
 });
 
 const User = mongoose.model('User', userSchema);
-module.exports = User;
+export default User;
