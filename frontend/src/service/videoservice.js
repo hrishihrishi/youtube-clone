@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const fetchFilteredVideos = async (searchSentence = "", category = "") => {
+
     const searchKeys = searchSentence.toLowerCase().split(' ').filter(word => word !== '');
 
     try {
@@ -51,9 +52,9 @@ export const deleteVideo = async (id) => {
     }
 }
 
-export const updateVidDetails = async (id, data) => {
+export const updateVidDetails = async (id, data, token) => {
     try {
-        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, data)
+        axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${id}`, data, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log("Video updated:", res.data);
                 return res.data
@@ -61,6 +62,7 @@ export const updateVidDetails = async (id, data) => {
             .catch(err => console.log(err))
     } catch (error) {
         console.error("Error updating video:", error);
+        alert("Error updating video : ", error);
         return [];
     }
 }

@@ -35,6 +35,8 @@ export default function VideoPlayingPage() {
     const [newComment, setNewComment] = useState("");
     const [likes, setLikes] = useState(0);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editedCommentText, setEditedCommentText] = useState("");
 
     // Fetch the primary video details whenever the 'id' in the URL changes
     useEffect(() => {
@@ -168,11 +170,22 @@ export default function VideoPlayingPage() {
     const onDeleteComment = (commentId) => {
         try {
             setComments(comments.filter(c => c.id !== commentId));
-            updateVidDetails(id, { comments: comments.filter(c => c.id !== commentId) });
+            updateVidDetails(id, { comments: comments.filter(c => c.id !== commentId) }, currentUser?.token);
         }
         catch (error) {
             console.log("Error deleting comment (in VideoPlayingPage.js):", error);
         }
+    };
+
+    const onEditComment = (commentId, newText) => {
+        if (!newText.trim()) return;
+        const updatedComments = comments.map(c =>
+            c.id === commentId ? { ...c, comment: newText } : c
+        );
+        setComments(updatedComments);
+        setEditingCommentId(null);
+        setEditedCommentText("");
+        updateVidDetails(id, { comments: updatedComments }, currentUser?.token);
     };
 
     // Updates the video details in the UI without a page refresh (I DON'T UNDERSTAND THIS)
@@ -313,13 +326,48 @@ export default function VideoPlayingPage() {
                                 // COMMENT CARD
                                 <div key={c.id} className="flex gap-3 text-sm">
                                     <div className="h-10 w-10 rounded-full bg-gray-300 shrink-0" />
-                                    <div>
+                                    <div className="flex-grow">
                                         <p className="font-bold">@{c.username?.toLowerCase() || 'guest'} <span className="font-normal text-gray-500 ml-2">1 second ago</span></p>
-                                        <p className="mt-1">{c.comment}</p>
+
+                                        {editingCommentId === c.id ? (
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <input
+                                                    type="text"
+                                                    value={editedCommentText}
+                                                    onChange={(e) => setEditedCommentText(e.target.value)}
+                                                    className="flex-grow border-b border-blue-500 outline-none py-1"
+                                                    autoFocus
+                                                />
+                                                <button
+                                                    onClick={() => onEditComment(c.id, editedCommentText)}
+                                                    className="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-medium hover:bg-blue-700"
+                                                >
+                                                    Confirm
+                                                </button>
+                                                <button
+                                                    onClick={() => { setEditingCommentId(null); setEditedCommentText(""); }}
+                                                    className="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium hover:bg-gray-200"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <p className="mt-1">{c.comment}</p>
+                                        )}
+
                                         <div className="flex items-center gap-4 mt-2">
                                             <AiOutlineLike className="cursor-pointer" /> {c.likes}
                                             <AiOutlineDislike className="cursor-pointer" />
                                             <span className="font-bold cursor-pointer">Reply</span>
+                                            <button
+                                                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full"
+                                                onClick={() => {
+                                                    setEditingCommentId(c.id);
+                                                    setEditedCommentText(c.comment);
+                                                }}
+                                            >
+                                                <MdEdit size={15} />
+                                            </button>
                                             <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full" onClick={() => onDeleteComment(c.id)}>
                                                 <AiOutlineDelete size={15} />
                                             </button>
