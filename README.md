@@ -150,6 +150,5 @@ backend/
 
 ---
 
-## 📜 License
-This project is licensed under the MIT License.
-`
+**Github Repo:** [hrishihrishi/youtube-clone](https://github.com/hrishihrishi/youtube-clone)
+**Email:** hrishi.halesh.18@gmail.com
