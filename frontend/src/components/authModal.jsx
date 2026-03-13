@@ -42,6 +42,9 @@ export default function AuthModal({ isOpen, onClose }) {
                 if (error.response.status === 409) {
                     alert("User already exists ! try to SignIn instead !");
                     setIsSignUp(false);
+                } else if (error.response.status === 401) {
+                    alert("Invalid password ! Enter correct password !");
+                    setIsSignUp(true);
                 }
                 // THIS IS GETTING TRIGGERED.
                 console.error(error);

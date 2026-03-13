@@ -37,18 +37,17 @@ export const fetchAllVideos = async () => {
 
 
 export const deleteVideo = async (id, token) => {
-    if (window.confirm("Are you sure you want to delete this video?")) {
-        try {
-            axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`, { headers: { Authorization: `Bearer ${token}` } })
-                .then(res => {
-                    console.log("Video deleted:", res.data);
-                    return res.data
-                })
-                .catch(err => console.log(err))
-        } catch (error) {
-            console.error("Error deleting video:", error);
-            return [];
-        }
+    if (!window.confirm("Are you sure you want to delete this video?")) return;
+    try {
+        const res = await axios.delete(
+            `http://localhost:5000/api/videos/deleteVideo/${id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Video deleted:", res.data);
+        return res.data;
+    } catch (error) {
+        console.error("Error deleting video:", error);
+        throw error;
     }
 }
 
