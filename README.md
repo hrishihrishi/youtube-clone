@@ -6,7 +6,10 @@ A comprehensive, full-stack video-sharing platform inspired by YouTube, built us
 
 The **YouTube Clone** is designed to provide a seamless video-watching and sharing experience. Users can browse videos by categories, search for specific content, interact with videos through likes and comments, and manage their own channels.
 
-### 🛠 Tech Stack
+### � Live Demo
+Watch the project in action: [Video Demo](https://drive.google.com/file/d/16rVQJ4LGVQl7EginwWwJ8aM6I1zs8hvO/view?usp=sharing)
+
+### �🛠 Tech Stack
 
 - **Frontend:** React, React Router, Axios, CSS Modules / Vanilla CSS.
 - **Backend:** Node.js, Express.js (ES Modules).
@@ -32,6 +35,9 @@ The **YouTube Clone** is designed to provide a seamless video-watching and shari
 ### 🔐 User Authentication
 - **Registration & Login:** Secure access using Username, Email, and Password.
 - **JWT Protection:** Secure token-based authentication for sensitive actions.
+- **Smart Redirection:** 
+  - If a user tries to Sign Up but an account already exists, the app automatically switches to **Sign In**.
+  - If a user tries to Sign In but no account is found, the app prompts for **Sign Up**.
 - **Protected Routes:** Only authenticated users can access features like uploading videos or managing their channel.
 
 ### 🔍 Search & Filters
@@ -39,17 +45,18 @@ The **YouTube Clone** is designed to provide a seamless video-watching and shari
 - **Category-Based Filtering:** quickly narrow down videos based on specific genres or topics.
 
 ### 🎥 Video Player Page
-- **Interative Player:** High-quality video playback.
+- **Interactive Player:** High-quality video playback.
 - **Engagement Tools:** Like and Dislike buttons to reflect user sentiment.
 - **Comment Section:** Full **CRUD** operations—Add, Edit, and Delete comments to foster community interaction.
 
-### 📽 Channel Management
+### 📽 Channel Management & Uploads
 - **Create Your Channel:** Set up a personalized space for your content.
+- **Video Ownership Logic:** Users can strictly **Delete** or **Update** only the videos belonging to their own channel.
 - **Video Management:** Full **CRUD** operations for your own videos:
-  - **Create:** Upload new videos.
-  - **Read:** View your uploaded content.
-  - **Update:** Edit video details (Option in the more icon).
-  - **Delete:** Remove videos from your channel. (Option in the more icon)
+  - **Create:** Upload new videos using GridFS for efficient storage.
+  - **Read:** View your uploaded content in a dedicated channel view.
+  - **Update:** Edit video details (Option in the "more" icon).
+  - **Delete:** Remove videos from your channel (Option in the "more" icon).
 
 ### 📱 Responsiveness
 - Optimized for **Mobile**, **Tablet**, and **Desktop** screens to ensure a consistent experience across all devices.

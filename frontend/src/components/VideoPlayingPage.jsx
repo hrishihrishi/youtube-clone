@@ -153,13 +153,15 @@ export default function VideoPlayingPage() {
             })
     };
 
+    // More options handler
     const onMoreClick = () => {
         setIsMoreOpen(!isMoreOpen);
     };
 
+    // Delete video handler
     const onDeleteClick = () => {
         try {
-            deleteVideo(id);
+            deleteVideo(id, currentUser?.token);
             navigate('/');
         }
         catch (error) {
@@ -167,6 +169,7 @@ export default function VideoPlayingPage() {
         }
     };
 
+    // Delete comment handler
     const onDeleteComment = (commentId) => {
         try {
             setComments(comments.filter(c => c.id !== commentId));
@@ -177,6 +180,7 @@ export default function VideoPlayingPage() {
         }
     };
 
+    // Edit comment handler
     const onEditComment = (commentId, newText) => {
         if (!newText.trim()) return;
         const updatedComments = comments.map(c =>

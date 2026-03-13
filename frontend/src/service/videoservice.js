@@ -36,10 +36,10 @@ export const fetchAllVideos = async () => {
 };
 
 
-export const deleteVideo = async (id) => {
+export const deleteVideo = async (id, token) => {
     if (window.confirm("Are you sure you want to delete this video?")) {
         try {
-            axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`)
+            axios.delete(`http://localhost:5000/api/videos/deleteVideo/${id}`, { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => {
                     console.log("Video deleted:", res.data);
                     return res.data

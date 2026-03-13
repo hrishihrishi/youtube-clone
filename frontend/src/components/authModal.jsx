@@ -39,9 +39,13 @@ export default function AuthModal({ isOpen, onClose }) {
                 onClose();
             })
             .catch((error) => {
+                if (error.response.status === 409) {
+                    alert("User already exists ! try to SignIn instead !");
+                    setIsSignUp(false);
+                }
                 // THIS IS GETTING TRIGGERED.
                 console.error(error);
-                alert("User not found !, try to SignUp instead !");
+                alert("User not found ! try to SignUp instead !");
                 setIsSignUp(true);
             });
     };

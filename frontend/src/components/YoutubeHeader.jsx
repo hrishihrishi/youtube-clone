@@ -40,6 +40,14 @@ export default function YoutubeHeader({ onMenuClick }) {
     Navigate('/');
   };
 
+  const handleSearch = () => {
+    if (search == "" || search == null || search == undefined) {
+      alert("Please enter a search term");
+      return;
+    }
+    Navigate('/SearchPage?searchSentence=' + search)
+  };
+
   return (
     <>
       <header className={classes.youtubeheader}>
@@ -68,19 +76,13 @@ export default function YoutubeHeader({ onMenuClick }) {
                 className="w-full outline-none text-base"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && Navigate('/SearchPage?searchSentence=' + search)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
 
             {/* Explicit Search button */}
             <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer mr-1"
-              onClick={() => {
-                if (search == "" || search == null || search == undefined) {
-                  alert("Please enter a search term");
-                  return;
-                }
-                Navigate('/SearchPage?searchSentence=' + search)
-              }}
+              onClick={() => handleSearch()}
             >
               <AiOutlineSearch size={22} />
             </button>
