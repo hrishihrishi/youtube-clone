@@ -70,12 +70,13 @@ Watch the project in action: [Video Demo](https://drive.google.com/file/d/16rVQJ
 - **npm** or **yarn**
 - **MongoDB Atlas** account
 
----
+
 ### Create .env file in backend folder
+```env
 PORT=5000
 MONGO_URI=mongodb+srv://hrishi_internshala:oBJHKLY9XAh3Yk3r@cluster0.zkji9lb.mongodb.net/?appName=Cluster0
 JWT_SECRET=youtube_clone_super_secret_key_123
----
+   ```
 
 1. **Clone the repository:**
    ```bash
