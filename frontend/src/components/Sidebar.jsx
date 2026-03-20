@@ -3,6 +3,7 @@ import { MdOutlineSubscriptions, MdOutlineVideoLibrary, MdOutlineHistory } from 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaYoutube } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 /**
  * Sidebar Component: A slide-out navigation drawer.
@@ -10,6 +11,7 @@ import { useNavigate } from "react-router-dom";
  */
 export default function Sidebar({ isOpen, onClose }) {
   const Navigate = useNavigate();
+  const theme = useSelector((state) => state.userPrefrences.theme);
   return (
     <>
       {/* 1. Dark Overlay (Backdrop) */}
@@ -19,11 +21,14 @@ export default function Sidebar({ isOpen, onClose }) {
       />
 
       {/* 2. Sidebar Container */}
-      <aside className={`fixed top-0 left-0 h-full w-60 bg-white z-[70] transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside
+        className={`fixed top-0 left-0 h-full w-60 z-[70] transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+      >
 
         {/* Sidebar Header (Menu + Logo) */}
         <div className="flex items-center gap-4 px-4 h-14">
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
+          <button onClick={onClose} className="p-2 hover:bg-[var(--bg-hover)] rounded-full cursor-pointer">
             <RxHamburgerMenu size={22} />
           </button>
           <div className="flex items-center gap-1 cursor-pointer" onClick={() => { Navigate('/'); onClose(); }}>
@@ -41,7 +46,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <SidebarItem icon={<AiOutlinePlaySquare size={22} />} label="Shorts" />
           <SidebarItem icon={<MdOutlineSubscriptions size={22} />} label="Subscriptions" />
 
-          <hr className="my-2 border-gray-200" />
+          <hr style={{ borderColor: 'var(--border-color)' }} className="my-2" />
 
           <div className="px-4 py-2 font-semibold text-sm">You</div>
           <SidebarItem icon={<MdOutlineVideoLibrary size={22} />} label="Library" />
@@ -56,7 +61,10 @@ export default function Sidebar({ isOpen, onClose }) {
 // Helper component for reusable menu items
 function SidebarItem({ icon, label, active = false }) {
   return (
-    <div className={`flex items-center gap-5 px-4 py-2.5 cursor-pointer hover:bg-gray-100 rounded-lg mx-2 ${active ? 'bg-gray-100 font-medium' : ''}`}>
+    <div
+      className={`flex items-center gap-5 px-4 py-2.5 cursor-pointer hover:bg-[var(--bg-hover)] rounded-lg mx-2 ${active ? 'font-medium' : ''}`}
+      style={active ? { backgroundColor: 'var(--bg-surface)' } : {}}
+    >
       {icon}
       <span className="text-sm">{label}</span>
     </div>

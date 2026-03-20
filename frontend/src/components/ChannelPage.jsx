@@ -21,6 +21,7 @@ export default function ChannelPage() {
   const tabs = ["Home", "Videos", "Shorts", "Live", "Playlists", "Community", "About"];
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [activeTab, setActiveTab] = useState("Videos");
+  const theme = useSelector((state) => state.userPrefrences.theme);
 
   const channel = {
     description: "Master the art of web development with project-based tutorials. New videos every Tuesday!",
@@ -101,7 +102,7 @@ export default function ChannelPage() {
   const isOwner = !!currentUser; // Only logged-in user views their own channel page
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-white">
+    <div className={`flex flex-col w-full min-h-screen ${theme === 'dark' ? 'dark-theme' : 'light-theme'}`}>
 
       {/* ── Upload Modal (Create) ──────────────────────────────────────── */}
       <UploadModal
@@ -127,8 +128,8 @@ export default function ChannelPage() {
       {/* ── 2. Channel Header Info ─────────────────────────────────────── */}
       <div className="max-w-[1284px] mx-auto px-4 py-6 flex flex-col md:flex-row gap-6 items-start md:items-center w-full">
         {/* Avatar: first letter */}
-        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 border border-gray-100 bg-gray-100 flex items-center justify-center">
-          <span className="text-7xl font-extrabold text-gray-600">
+        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 flex items-center justify-center" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-light)' }}>
+          <span className="text-7xl font-extrabold">
             {currentUser?.user?.username?.[0]?.toUpperCase() ?? '?'}
           </span>
         </div>
@@ -136,14 +137,14 @@ export default function ChannelPage() {
         {/* Details */}
         <div className="flex flex-col gap-2 flex-grow">
           <h1 className="text-4xl font-bold">{userDetails?.channel || currentUser?.user?.username}</h1>
-          <div className="flex gap-2 text-sm text-gray-600 font-medium flex-wrap">
+          <div className="flex gap-2 text-sm font-medium flex-wrap" style={{ color: 'var(--text-secondary)' }}>
             <span>@{userDetails?.username?.toLowerCase()}</span>
             <span>•</span>
             <span>{userDetails?.subscribersCount || 0} subscribers</span>
             <span>•</span>
             <span>{videoData.length} videos</span>
           </div>
-          <p className="text-gray-600 text-sm max-w-2xl line-clamp-1 hover:line-clamp-none cursor-pointer">
+          <p className="text-sm max-w-2xl line-clamp-1 hover:line-clamp-none cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
             {channel.description}
           </p>
 
@@ -152,7 +153,8 @@ export default function ChannelPage() {
             {isOwner && (
               <button
                 onClick={() => setIsUploadModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2 bg-black text-white rounded-full font-semibold hover:bg-zinc-800 transition text-sm"
+                className="flex items-center gap-2 px-5 py-2 rounded-full font-semibold hover:opacity-80 transition text-sm"
+                style={{ backgroundColor: 'var(--btn-subscribe-bg)', color: 'var(--btn-subscribe-text)' }}
               >
                 <AiOutlinePlusCircle size={18} />
                 Upload Video
@@ -160,10 +162,11 @@ export default function ChannelPage() {
             )}
             <button
               onClick={() => setIsSubscribed(!isSubscribed)}
-              className={`px-4 py-2 rounded-full font-medium transition text-sm ${isSubscribed
-                ? 'bg-gray-100 text-black hover:bg-gray-200'
-                : 'bg-gray-800 text-white hover:bg-zinc-700'
-                }`}
+              className="px-4 py-2 rounded-full font-medium transition text-sm"
+              style={isSubscribed
+                ? { backgroundColor: 'var(--btn-subscribed-bg)', color: 'var(--btn-subscribed-text)' }
+                : { backgroundColor: 'var(--btn-subscribe-bg)', color: 'var(--btn-subscribe-text)' }
+              }
             >
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
@@ -172,16 +175,20 @@ export default function ChannelPage() {
       </div>
 
       {/* ── 3. Navigation Tabs ─────────────────────────────────────────── */}
-      <div className="max-w-[1284px] mx-auto w-full px-4 border-b border-gray-200 sticky top-14 bg-white z-40">
+      <div className="max-w-[1284px] mx-auto w-full px-4 sticky top-14 z-40" style={{ backgroundColor: 'var(--bg-primary)', borderBottom: '1px solid var(--border-color)' }}>
         <div className="flex gap-8 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`py-3 text-sm font-semibold transition-colors whitespace-nowrap border-b-2 ${activeTab === tab
-                ? 'border-black text-black'
-                : 'border-transparent text-gray-600 hover:text-black'
+                ? ''
+                : 'border-transparent'
                 }`}
+              style={activeTab === tab
+                ? { borderBottomColor: 'var(--text-primary)', color: 'var(--text-primary)' }
+                : { color: 'var(--text-secondary)' }
+              }
             >
               {tab}
             </button>
@@ -193,17 +200,18 @@ export default function ChannelPage() {
       <div className="max-w-[1284px] mx-auto w-full px-4 py-6">
         {activeTab === "Videos" ? (
           loading ? (
-            <div className="flex items-center justify-center py-20 text-gray-500">
+            <div className="flex items-center justify-center py-20" style={{ color: 'var(--text-muted)' }}>
               Loading videos...
             </div>
           ) : videoData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-4 text-gray-500">
-              <MdVideoLibrary size={60} className="text-gray-300" />
+            <div className="flex flex-col items-center justify-center py-24 gap-4" style={{ color: 'var(--text-muted)' }}>
+              <MdVideoLibrary size={60} />
               <p className="text-lg font-semibold">No videos yet</p>
               {isOwner && (
                 <button
                   onClick={() => setIsUploadModalOpen(true)}
-                  className="px-6 py-2 bg-black text-white rounded-full font-medium hover:bg-zinc-800 transition text-sm"
+                  className="px-6 py-2 rounded-full font-medium transition text-sm"
+                  style={{ backgroundColor: 'var(--btn-subscribe-bg)', color: 'var(--btn-subscribe-text)' }}
                 >
                   Upload your first video
                 </button>
@@ -224,7 +232,7 @@ export default function ChannelPage() {
             </div>
           )
         ) : (
-          <div className="flex items-center justify-center py-20 text-gray-500 italic">
+          <div className="flex items-center justify-center py-20 italic" style={{ color: 'var(--text-muted)' }}>
             {activeTab} content is coming soon...
           </div>
         )}
@@ -272,7 +280,7 @@ function ChannelVideoCard({ video, isOwner, onPlayClick, onEditClick, onDeleteCl
       {/* Details row */}
       <div className="flex gap-2 pr-1">
         {/* Avatar */}
-        <div className="h-9 w-9 rounded-full bg-gray-200 flex-shrink-0 mt-0.5 overflow-hidden">
+        <div className="h-9 w-9 rounded-full flex-shrink-0 mt-0.5 overflow-hidden" style={{ backgroundColor: 'var(--bg-surface)' }}>
           <img
             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`}
             alt="avatar"
@@ -287,8 +295,8 @@ function ChannelVideoCard({ video, isOwner, onPlayClick, onEditClick, onDeleteCl
           >
             {video.title}
           </h3>
-          <p className="text-gray-500 text-xs mt-1">{video.channel}</p>
-          <p className="text-gray-500 text-xs">
+          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{video.channel}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             {formatViews(video.views)} views • {formatDate(video.dateTime)}
           </p>
         </div>
@@ -299,7 +307,8 @@ function ChannelVideoCard({ video, isOwner, onPlayClick, onEditClick, onDeleteCl
         <div className="flex gap-2 pl-11">
           <button
             onClick={onEditClick}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-blue-50 hover:text-blue-600 rounded-full transition"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-full transition hover:bg-blue-50 hover:text-blue-600"
+            style={{ backgroundColor: 'var(--bg-surface)' }}
             title="Edit video details"
           >
             {/* edit icon */}
@@ -307,7 +316,8 @@ function ChannelVideoCard({ video, isOwner, onPlayClick, onEditClick, onDeleteCl
           </button>
           <button
             onClick={onDeleteClick}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-full transition"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-full transition hover:bg-red-50 hover:text-red-600"
+            style={{ backgroundColor: 'var(--bg-surface)' }}
             title="Delete video"
           >
             {/* delete icon */}

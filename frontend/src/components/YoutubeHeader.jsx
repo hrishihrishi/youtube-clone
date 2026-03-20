@@ -54,13 +54,13 @@ export default function YoutubeHeader({ onMenuClick }) {
 
         {/* Left Section: Hamburger Menu and YouTube Logo */}
         <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer sm:mr-1" onClick={onMenuClick}>
+          <button className="p-2 hover:bg-[var(--bg-hover)] rounded-full cursor-pointer sm:mr-1" onClick={onMenuClick}>
             <RxHamburgerMenu size={22} />
           </button>
 
           <div className="hidden sm:flex items-center gap-1 cursor-pointer" onClick={() => Navigate('/')}>
             <FaYoutube size={30} className="text-red-600" />
-            <span className="font-bold text-xl tracking-tighter">YouTube</span>
+            <span className="font-bold text-xl tracking-tighter">{/* inherits theme text color */}YouTube</span>
           </div>
         </div>
 
@@ -69,11 +69,12 @@ export default function YoutubeHeader({ onMenuClick }) {
           <div className="flex w-full">
 
             {/* Main search input field with 'Enter' key support */}
-            <div className="flex w-full items-center border border-gray-300 rounded-l-full px-4 py-1 focus-within:border-blue-500 shadow-inner">
+            <div className="flex w-full items-center rounded-l-full px-4 py-1 focus-within:border-blue-500 shadow-inner" style={{ border: '1px solid var(--input-border)' }}>
               <input
                 type="text"
                 placeholder="Search"
                 className="w-full outline-none text-base"
+                style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -81,7 +82,8 @@ export default function YoutubeHeader({ onMenuClick }) {
             </div>
 
             {/* Explicit Search button */}
-            <button className="bg-gray-50 border border-l-0 border-gray-300 rounded-r-full px-5 py-2 hover:bg-gray-100 border-solid cursor-pointer mr-1"
+            <button className="border border-l-0 rounded-r-full px-5 py-2 hover:bg-[var(--bg-hover)] border-solid cursor-pointer mr-1"
+              style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--input-border)' }}
               onClick={() => handleSearch()}
             >
               <AiOutlineSearch size={22} />
@@ -91,7 +93,8 @@ export default function YoutubeHeader({ onMenuClick }) {
 
         {/* Right Section: Create Button, Notifications, and User Profile/Sign-in */}
         <button
-          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 active:scale-95 group"
+          className="flex items-center gap-2 px-4 py-2 rounded-full transition-colors duration-200 active:scale-95 group"
+          style={{ backgroundColor: 'var(--bg-surface)', color: 'var(--text-primary)' }}
           aria-label="Create"
           onClick={() => setIsUploadModalOpen(true)}
         >
@@ -102,19 +105,20 @@ export default function YoutubeHeader({ onMenuClick }) {
               viewBox="0 0 24 24"
               width="24"
               focusable="false"
-              className="pointer-events-none block w-full h-full fill-current text-black"
+              className="pointer-events-none block w-full h-full fill-current"
+              style={{ color: 'var(--text-primary)' }}
             >
               <path d="M12 3a1 1 0 00-1 1v7H4a1 1 0 000 2h7v7a1 1 0 002 0v-7h7a1 1 0 000-2h-7V4a1 1 0 00-1-1Z"></path>
             </svg>
           </div>
-          <span className="hidden sm:flex text-sm font-medium text-black">Create</span>
+          <span className="hidden sm:flex text-sm font-medium">{/* inherits theme text */}Create</span>
         </button>
 
         {/* Conditional rendering for the Video Upload Modal */}
         {isUploadModalOpen && <UploadModal isUploadModalOpen={isUploadModalOpen} setIsUploadModalOpen={setIsUploadModalOpen} />}
 
         <div className="relative flex items-center gap-2 md:gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer hidden sm:block">
+          <button className="p-2 hover:bg-[var(--bg-hover)] rounded-full cursor-pointer hidden sm:block">
             <AiOutlineBell size={24} title="Notifications" />
           </button>
 
@@ -132,13 +136,15 @@ export default function YoutubeHeader({ onMenuClick }) {
                 <ProfileDropdown
                   user={currentUser || { username: 'User', name: 'User', handle: 'user123' }}
                   onSignOut={handleSignOut}
+                  onClose={() => setIsProfileDropdownOpen(false)}
                 />
               )}
             </div>
           ) : (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-blue-600 font-medium hover:bg-blue-50 transition cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-2 px-3 py-1 border rounded-full text-blue-600 font-medium hover:bg-blue-50 transition cursor-pointer whitespace-nowrap"
+              style={{ borderColor: 'var(--border-color)' }}
             >
               <FaUserCircle size={24} />
               <span className="text-sm">Sign in</span>
@@ -155,7 +161,9 @@ export default function YoutubeHeader({ onMenuClick }) {
       </header>
 
       {/* Category Tags Section: Horizontally scrollable list of video categories */}
-      <div className="flex items-center gap-3 px-4 py-3 overflow-x-auto border-b border-gray-100 bg-white scrollbar-hide justify-around">
+      <div className="flex items-center gap-3 px-4 py-3 overflow-x-auto scrollbar-hide justify-around"
+        style={{ backgroundColor: 'var(--bg-primary)', borderBottom: '1px solid var(--border-light)' }}
+      >
         {tags.map((tag) => (
           <button
             key={tag}
@@ -167,13 +175,13 @@ export default function YoutubeHeader({ onMenuClick }) {
               } else {
                 params.set("category", tag); // Apply specific category filter
                 Navigate(`/SearchPage?${params.toString()}`);
-                // window.location.reload();
               }
             }}
-            className={`flex-1 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${tag === "All"
-              ? "bg-black text-white"
-              : "bg-gray-100 text-black hover:bg-gray-200"
-              }`}
+            className="flex-1 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200"
+            style={tag === "All"
+              ? { backgroundColor: 'var(--chip-bg-active)', color: 'var(--chip-text-active)' }
+              : { backgroundColor: 'var(--chip-bg)', color: 'var(--chip-text)' }
+            }
           >
             {tag}
           </button>

@@ -44,14 +44,14 @@ export default function SearchPage({ isSidebarOpen = false }) {
     noQuery ? (
       <div className="flex flex-col items-center mt-20">
         <h2 className="text-xl font-medium">No results found</h2>
-        <p className="text-gray-500">Try different keywords or more general terms.</p>
+        <p style={{ color: 'var(--text-muted)' }}>Try different keywords or more general terms.</p>
       </div>
     ) : (
       <div className={`transition-all duration-300 p-4 ${isSidebarOpen ? 'ml-60' : 'ml-0'}`}>
         <div className="max-w-[1100px] mx-auto flex flex-col gap-4">
 
           {loading ? (
-            <p className="text-center text-gray-600 mt-10">Searching for "{searchSentence}"...</p>
+            <p className="text-center mt-10" style={{ color: 'var(--text-secondary)' }}>Searching for "{searchSentence}"...</p>
           ) : (
             <>
               {/* Display results or a 'not found' message */}
@@ -62,7 +62,7 @@ export default function SearchPage({ isSidebarOpen = false }) {
               ) : (
                 <div className="flex flex-col items-center mt-20">
                   <h2 className="text-xl font-medium">No results found</h2>
-                  <p className="text-gray-500">Try different keywords or more general terms.</p>
+                  <p style={{ color: 'var(--text-muted)' }}>Try different keywords or more general terms.</p>
                 </div>
               )}
             </>

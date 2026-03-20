@@ -83,20 +83,16 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
     }
   };
 
-
-
-
-
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
           <h2 className="text-xl font-bold">Upload video</h2>
           <button
             onClick={() => setIsUploadModalOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-full transition"
+            className="p-2 hover:bg-[var(--bg-hover)] rounded-full transition"
           >
             <MdClose size={24} />
           </button>
@@ -114,7 +110,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               <input
                 name="title"
                 required
-                className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none"
+                className="w-full rounded-md p-3 focus:border-blue-500 outline-none"
+                style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                 placeholder="Add a title that describes your video"
                 onChange={handleInputChange}
               />
@@ -126,7 +123,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               <textarea
                 name="description"
                 rows="5"
-                className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none resize-none"
+                className="w-full rounded-md p-3 focus:border-blue-500 outline-none resize-none"
+                style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                 placeholder="Tell viewers about your video"
                 onChange={handleInputChange}
               />
@@ -137,7 +135,8 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
               <label className="text-sm font-semibold">Category</label>
               <select
                 name="category"
-                className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 outline-none bg-white"
+                className="w-full rounded-md p-3 focus:border-blue-500 outline-none"
+                style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                 onChange={handleInputChange}
               >
                 {
@@ -153,13 +152,13 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
           <div className="flex flex-col gap-6">
 
             {/* VIDEO FILE INPUT */}
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 bg-gray-50">
-              <div className="p-4 bg-white rounded-full shadow-sm text-gray-500">
+            <div className="border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)' }}>
+              <div className="p-4 rounded-full shadow-sm" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-muted)' }}>
                 <MdFileUpload size={40} />
               </div>
               <div>
-                <p className="font-semibold text-gray-700">Select Video File</p>
-                <p className="text-xs text-gray-500 mt-1">MP4, WEBM, or MOV</p>
+                <p className="font-semibold" style={{ color: 'var(--text-secondary)' }}>Select Video File</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>MP4, WEBM, or MOV</p>
               </div>
               <input
                 type="file"
@@ -192,13 +191,14 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
                 />
                 <label
                   htmlFor="thumbInput"
-                  className="w-32 h-20 border border-gray-300 rounded-md flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-50 transition border-dashed"
+                  className="w-32 h-20 rounded-md flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-[var(--bg-hover)] transition border-dashed"
+                  style={{ border: '1px solid var(--border-color)' }}
                 >
-                  <MdOutlinePhotoLibrary className="text-gray-400" size={24} />
-                  <span className="text-[10px] text-gray-500 uppercase">Upload</span>
+                  <MdOutlinePhotoLibrary size={24} style={{ color: 'var(--text-muted)' }} />
+                  <span className="text-[10px] uppercase" style={{ color: 'var(--text-muted)' }}>Upload</span>
                 </label>
                 {formData.thumbnail && (
-                  <div className="h-20 w-32 rounded bg-gray-100 flex items-center justify-center text-[10px] text-center p-2 truncate">
+                  <div className="h-20 w-32 rounded flex items-center justify-center text-[10px] text-center p-2 truncate" style={{ backgroundColor: 'var(--bg-surface)' }}>
                     {formData.thumbnail.name}
                   </div>
                 )}
@@ -208,10 +208,10 @@ export default function UploadModal({ isUploadModalOpen, setIsUploadModalOpen })
 
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
+          <div className="px-6 py-4 flex justify-end gap-3 rounded-b-2xl" style={{ borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-secondary)' }}>
             <button
               onClick={() => setIsUploadModalOpen(false)}
-              className="px-4 py-2 hover:bg-gray-200 rounded-full font-medium transition"
+              className="px-4 py-2 hover:bg-[var(--bg-hover)] rounded-full font-medium transition"
             >
               Cancel
             </button>

@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
+import userPrefrencesReducer from './userPrefrences';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -11,6 +12,7 @@ import storage from 'redux-persist/lib/storage';
 // 1. Centralize all feature-specific reducers
 const rootReducer = combineReducers({
   user: userReducer, // Handles auth and current user profile
+  userPrefrences: userPrefrencesReducer, // Handles theme and other user preferences
 });
 
 /* 

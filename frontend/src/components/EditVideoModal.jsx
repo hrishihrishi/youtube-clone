@@ -32,9 +32,9 @@ export default function EditVideoModal({ video, isOpen, onClose, onUpdateSuccess
     e.preventDefault();
     setLoading(true);
     try {
-      if (!currentUser?.token){
+      if (!currentUser?.token) {
         alert("You must be logged in to edit videos");
-          return;
+        return;
       }
 
       const res = await axios.post(`http://localhost:5000/api/videos/updateVideoDetails/${video._id}`, formData, {
@@ -58,8 +58,8 @@ export default function EditVideoModal({ video, isOpen, onClose, onUpdateSuccess
 
   return (
     <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-xl rounded-xl shadow-2xl p-6 relative">
-        <button onClick={onClose} className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full">
+      <div className="w-full max-w-xl rounded-xl shadow-2xl p-6 relative" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+        <button onClick={onClose} className="absolute top-4 right-4 p-1 hover:bg-[var(--bg-hover)] rounded-full">
           <MdClose size={24} />
         </button>
 
@@ -67,32 +67,35 @@ export default function EditVideoModal({ video, isOpen, onClose, onUpdateSuccess
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-gray-500">Title</label>
+            <label className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Title</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full border border-gray-300 rounded p-2 focus:border-blue-500 outline-none"
+              className="w-full rounded p-2 focus:border-blue-500 outline-none"
+              style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
               required
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-gray-500">Description</label>
+            <label className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Description</label>
             <textarea
               rows="4"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full border border-gray-300 rounded p-2 focus:border-blue-500 outline-none resize-none"
+              className="w-full rounded p-2 focus:border-blue-500 outline-none resize-none"
+              style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-gray-500">Category</label>
+            <label className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full border border-gray-300 rounded p-2 focus:border-blue-500 outline-none bg-white"
+              className="w-full rounded p-2 focus:border-blue-500 outline-none"
+              style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
             >
               <option>Education</option>
               <option>Gaming</option>
@@ -105,7 +108,7 @@ export default function EditVideoModal({ video, isOpen, onClose, onUpdateSuccess
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium hover:bg-gray-100 rounded-full"
+              className="px-4 py-2 text-sm font-medium hover:bg-[var(--bg-hover)] rounded-full"
             >
               Cancel
             </button>

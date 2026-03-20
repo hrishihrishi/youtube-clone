@@ -54,20 +54,20 @@ export default function AuthModal({ isOpen, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-white sm:bg-black/50">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
             {/* Main Modal Container */}
-            <div className="bg-white w-full max-w-[450px] sm:rounded-xl sm:border border-gray-200 p-8 sm:p-10 flex flex-col items-center">
+            <div className="w-full max-w-[450px] sm:rounded-xl p-8 sm:p-10 flex flex-col items-center" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}>
 
                 {/* Brand Logo Header */}
                 <div className="flex items-center gap-1 mb-2">
                     <FaYoutube size={32} className="text-red-600" />
-                    <span className="font-bold text-2xl tracking-tighter text-black">YouTube</span>
+                    <span className="font-bold text-2xl tracking-tighter">YouTube</span>
                 </div>
 
-                <h2 className="text-2xl font-normal text-gray-900 mb-2">
+                <h2 className="text-2xl font-normal mb-2">
                     {isSignUp ? "Sign up and create your Channel" : "Sign in and create your Channel"}
                 </h2>
-                <p className="text-base text-gray-700 mb-8">
+                <p className="text-base mb-8" style={{ color: 'var(--text-secondary)' }}>
                     to continue to YouTube
                 </p>
 
@@ -79,7 +79,8 @@ export default function AuthModal({ isOpen, onClose }) {
                             type="text"
                             placeholder="Username"
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                            style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                         />
                     )}
@@ -88,7 +89,8 @@ export default function AuthModal({ isOpen, onClose }) {
                         type="email"
                         placeholder="Email"
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                        className="w-full px-4 py-3 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                        style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
 
@@ -96,7 +98,8 @@ export default function AuthModal({ isOpen, onClose }) {
                         type="password"
                         placeholder="Password"
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                        className="w-full px-4 py-3 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+                        style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)' }}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />
 
@@ -122,7 +125,8 @@ export default function AuthModal({ isOpen, onClose }) {
                 {/* Close/Cancel Trigger */}
                 <button
                     onClick={onClose}
-                    className="mt-8 text-sm text-gray-500 hover:text-gray-700 underline"
+                    className="mt-8 text-sm hover:underline"
+                    style={{ color: 'var(--text-muted)' }}
                 >
                     Cancel
                 </button>

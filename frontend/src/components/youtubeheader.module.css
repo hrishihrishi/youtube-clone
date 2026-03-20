@@ -1,5 +1,7 @@
 @reference "../index.css";
 
 .youtubeheader {
-    @apply flex justify-between items-center h-14 px-4 sticky top-0 bg-white z-50;
+    @apply flex justify-between items-center h-14 px-4 sticky top-0 z-50;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }

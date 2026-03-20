@@ -5,9 +5,73 @@
 }
 
 .gray-btn {
-  @apply border-2 border-gray-300 bg-gray-200 rounded-4xl 
+  @apply border-2 border-gray-300 bg-gray-200 rounded-4xl
 }
 
 button {
   cursor: pointer;
+}
+
+/* ── Theme Configuration using CSS Variables ── */
+
+.dark-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-surface: #272727;
+  --bg-hover: #383232;
+  --bg-elevated: #212121;
+
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-muted: #717171;
+
+  --border-color: #303030;
+  --border-light: #272727;
+
+  --input-bg: #121212;
+  --input-border: #303030;
+
+  --chip-bg: #272727;
+  --chip-bg-active: #f1f1f1;
+  --chip-text: #f1f1f1;
+  --chip-text-active: #0f0f0f;
+
+  --btn-subscribe-bg: #ffffff;
+  --btn-subscribe-text: #0f0f0f;
+  --btn-subscribed-bg: #272727;
+  --btn-subscribed-text: #f1f1f1;
+}
+
+.light-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-surface: #f2f2f2;
+  --bg-hover: #e5e5e5;
+  --bg-elevated: #ffffff;
+
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --text-muted: #909090;
+
+  --border-color: #e5e5e5;
+  --border-light: #f0f0f0;
+
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+
+  --chip-bg: #f2f2f2;
+  --chip-bg-active: #0f0f0f;
+  --chip-text: #0f0f0f;
+  --chip-text-active: #ffffff;
+
+  --btn-subscribe-bg: #0f0f0f;
+  --btn-subscribe-text: #ffffff;
+  --btn-subscribed-bg: #f2f2f2;
+  --btn-subscribed-text: #0f0f0f;
 }
