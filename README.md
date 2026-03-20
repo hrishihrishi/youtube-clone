@@ -7,7 +7,7 @@ A comprehensive, full-stack video-sharing platform inspired by YouTube, built us
 The **YouTube Clone** is designed to provide a seamless video-watching and sharing experience. Users can browse videos by categories, search for specific content, interact with videos through likes and comments, and manage their own channels.
 
 ### � Live Demo
-Watch the project in action: [Video Demo](https://drive.google.com/file/d/16rVQJ4LGVQl7EginwWwJ8aM6I1zs8hvO/view?usp=sharing)
+Watch the project in action: [Video Demo](https://drive.google.com/file/d/1y2ht3t_QRL2bCJWk2uxdtp46fsaBn-ow/view?usp=sharing)
 
 ### �🛠 Tech Stack
 
@@ -51,12 +51,15 @@ Watch the project in action: [Video Demo](https://drive.google.com/file/d/16rVQJ
 
 ### 📽 Channel Management & Uploads
 - **Create Your Channel:** Set up a personalized space for your content.
-- **Video Ownership Logic:** Users can strictly **Delete** or **Update** only the videos belonging to their own channel. (user existing gmail : k@gmail.com , password: k)
+- **Video Ownership Logic:** Users can strictly **Delete** or **Update** only the videos belonging to their own channel. **(user existing gmail : k@gmail.com , password: k)**
 - **Video Management:** Full **CRUD** operations for your own videos:
   - **Create:** Upload new videos using GridFS for efficient storage.
   - **Read:** View your uploaded content in a dedicated channel view.
   - **Update:** Edit video details (Option in the "more" icon).
   - **Delete:** Remove videos from your channel (Option in the "more" icon).
+
+### 🌓 Dark Mode
+- Users can switch between dark and light mode. (in profile dropdown)
 
 ### 📱 Responsiveness
 - Optimized for **Mobile**, **Tablet**, and **Desktop** screens to ensure a consistent experience across all devices.
@@ -148,5 +151,6 @@ backend/
 
 ---
 
-**Github Repo:** [hrishihrishi/youtube-clone](https://github.com/hrishihrishi/youtube-clone)
+**Github Repo:** [hrishihrishi/youtube-clone](https://github.com/hrishihrishi/youtube-clone)  
+
 **Email:** hrishi.halesh.18@gmail.com
