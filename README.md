@@ -51,7 +51,7 @@ Watch the project in action: [Video Demo](https://drive.google.com/file/d/16rVQJ
 
 ### 📽 Channel Management & Uploads
 - **Create Your Channel:** Set up a personalized space for your content.
-- **Video Ownership Logic:** Users can strictly **Delete** or **Update** only the videos belonging to their own channel.
+- **Video Ownership Logic:** Users can strictly **Delete** or **Update** only the videos belonging to their own channel. (user existing gmail : k@gmail.com , password: k)
 - **Video Management:** Full **CRUD** operations for your own videos:
   - **Create:** Upload new videos using GridFS for efficient storage.
   - **Read:** View your uploaded content in a dedicated channel view.
